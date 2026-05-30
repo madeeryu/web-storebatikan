@@ -205,7 +205,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
           <div className="space-y-1.5">
             <Label style={labelStyle}>Harga Normal (Rp) *</Label>
             <Input
-              {...register('price')}
+              {...register('price', { valueAsNumber: true })}
               type="number"
               min={0}
               className={fieldStyle}
@@ -218,7 +218,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
           <div className="space-y-1.5">
             <Label style={labelStyle}>Diskon (%)</Label>
             <Input
-              {...register('discount_percent')}
+              {...register('discount_percent', { valueAsNumber: true })}
               type="number"
               min={0}
               max={100}
