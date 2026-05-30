@@ -189,21 +189,15 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
           {/* Category */}
           <div className="space-y-1.5">
             <Label style={labelStyle}>Kategori *</Label>
-            <Select
-              value={watch('category_id') || ''}
-              onValueChange={(v) => setValue('category_id', v, { shouldValidate: true })}
+            <select
+              {...register('category_id')}
+              className="w-full h-9 px-3 py-1 text-sm border border-stone-300 rounded-lg bg-white focus:outline-none focus:border-[#8B1A1A] focus:ring-1 focus:ring-[#8B1A1A]"
             >
-              <SelectTrigger className={fieldStyle}>
-                <SelectValue placeholder="Pilih kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <option value="">Pilih kategori</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
             {errors.category_id && <p className="text-xs text-red-500">{errors.category_id.message}</p>}
           </div>
 
