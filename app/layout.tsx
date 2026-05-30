@@ -1,8 +1,8 @@
-import type { Metadata } from 'next'
 import { Playfair_Display, Inter, Cormorant_Garamond } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import PageTransition from '@/components/layout/PageTransition'
+import { baseMetadata } from '@/lib/metadata'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -27,24 +27,7 @@ const cormorant = Cormorant_Garamond({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Batik AN — Warisan Budaya Modern',
-    template: '%s — Batik AN | Warisan Budaya Modern',
-  },
-  description:
-    'Toko batik online terpercaya. Koleksi batik tulis, batik cap, dan batik modern pilihan dengan kualitas premium dari perajin terbaik nusantara.',
-  keywords: ['batik', 'batik tulis', 'batik cap', 'kain batik', 'baju batik', 'batik AN'],
-  openGraph: {
-    title: 'Batik AN — Warisan Budaya Modern',
-    description: 'Koleksi batik premium dari perajin terbaik nusantara.',
-    url: 'https://storebatikan.vercel.app',
-    siteName: 'Batik AN',
-    locale: 'id_ID',
-    type: 'website',
-  },
-  robots: { index: true, follow: true },
-}
+export const metadata = baseMetadata
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

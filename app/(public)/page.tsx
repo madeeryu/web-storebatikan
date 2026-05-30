@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import type { Metadata } from 'next'
 import Footer from '@/components/layout/Footer'
 import { HeroBanner } from '@/components/home/HeroBanner'

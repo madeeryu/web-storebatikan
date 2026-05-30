@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── PUBLIC READ, ADMIN WRITE ─────────────────────────────────────────────
+
+    match /products/{id} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /categories/{id} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /banners/{id} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /promos/{id} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ── REVIEWS ──────────────────────────────────────────────────────────────
+    // Public: read (client filters is_approved), create
+    // Admin only: update (approve), delete
+
+    match /reviews/{id} {
+      allow read: if true;
+      allow create: if
+        // Basic validation: required fields must exist
+        request.resource.data.keys().hasAll([
+          'product_id', 'reviewer_name', 'rating', 'comment', 'is_approved', 'created_at'
+        ]) &&
+        // is_approved must be false on create (prevent self-approval)
+        request.resource.data.is_approved == false &&
+        // Rating must be 1-5
+        request.resource.data.rating >= 1 &&
+        request.resource.data.rating <= 5 &&
+        // Comment not empty
+        request.resource.data.comment.size() > 0 &&
+        // Reviewer name not empty
+        request.resource.data.reviewer_name.size() > 0;
+      allow update, delete: if request.auth != null;
+    }
+
+    // ── DENY ALL OTHER COLLECTIONS ────────────────────────────────────────────
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
