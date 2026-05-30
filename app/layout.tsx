@@ -51,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="id"
       className={`${playfair.variable} ${inter.variable} ${cormorant.variable}`}
+      data-scroll-behavior="smooth"
     >
       <body
         className="antialiased min-h-screen"

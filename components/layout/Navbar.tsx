@@ -79,6 +79,8 @@ export default function Navbar() {
                       src="/logo.png"
                       alt="Batik AN"
                       fill
+                      sizes="48px"
+                      loading="eager"
                       className="object-contain"
                       onError={() => setLogoError(true)}
                     />
@@ -189,6 +191,8 @@ export default function Navbar() {
                     src="/logo.png"
                     alt="Batik AN"
                     fill
+                    sizes="36px"
+                    loading="eager"
                     className="object-contain"
                     onError={() => setLogoError(true)}
                   />
