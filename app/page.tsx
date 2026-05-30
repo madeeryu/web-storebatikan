@@ -1,65 +1,64 @@
-import Image from "next/image";
+import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <>
+      <Navbar />
+      <main
+        className="min-h-screen flex items-center justify-center bg-batik-pattern"
+        style={{ backgroundColor: '#F5EFE0' }}
+      >
+        <div className="text-center px-6 py-20">
+          {/* Logo placeholder */}
+          <div
+            className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, #C9A84C, #A8882E)',
+              boxShadow: '0 4px 20px rgba(201, 168, 76, 0.3)',
+            }}
+          >
+            <span
+              className="font-playfair text-3xl font-bold"
+              style={{ color: '#8B1A1A' }}
+            >
+              AN
+            </span>
+          </div>
+
+          <h1
+            className="font-playfair text-5xl font-bold mb-3"
+            style={{ color: '#8B1A1A' }}
+          >
+            Batik AN
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p
+            className="font-cormorant italic text-2xl mb-8"
+            style={{ color: '#6B3F2A' }}
+          >
+            Warisan Budaya Modern
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+          {/* Ornamen divider */}
+          <div className="ornamen-divider max-w-xs mx-auto mb-8">
+            <span style={{ color: '#C9A84C', fontSize: '1.2rem' }}>✦</span>
+          </div>
+
+          <div
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium"
+            style={{
+              backgroundColor: 'rgba(139, 26, 26, 0.08)',
+              color: '#8B1A1A',
+              border: '1px solid rgba(139, 26, 26, 0.2)',
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
+            Step 1 Selesai ✓ — Siap lanjut ke Step 2
+          </div>
         </div>
       </main>
-    </div>
-  );
+      <Footer />
+    </>
+  )
 }

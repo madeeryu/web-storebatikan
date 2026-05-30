@@ -1,26 +1,217 @@
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/effect-fade';
+
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
+/* ═══════════════════════════════════════════
+   BATIK AN — COLOR PALETTE (Kebonbatik style)
+   ═══════════════════════════════════════════ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-gold:        #C5973A;
+  --color-gold-light:  #D4AE5A;
+  --color-gold-dark:   #A87C2A;
+  --color-cream:       #FFFFFF;
+  --color-ivory:       #FAFAFA;
+  --color-charcoal:    #1A1A1A;
+  --color-gray:        #666666;
+  --color-gray-light:  #E5E5E5;
+  --color-maroon:      #8B1A1A;
+
+  --color-background:           var(--background);
+  --color-foreground:           var(--foreground);
+  --color-card:                 var(--card);
+  --color-card-foreground:      var(--card-foreground);
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-border:               var(--border);
+  --color-ring:                 var(--ring);
+
+  --font-sans:      var(--font-inter);
+  --font-playfair:  var(--font-playfair);
+  --font-cormorant: var(--font-cormorant);
+  --font-mono:      monospace;
+
+  --radius-sm:  calc(var(--radius) * 0.6);
+  --radius-md:  calc(var(--radius) * 0.8);
+  --radius-lg:  var(--radius);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ═══════════════════════════════════════════
+   CSS VARIABLES
+   ═══════════════════════════════════════════ */
+:root {
+  --background:         #FFFFFF;
+  --foreground:         #1A1A1A;
+  --card:               #FFFFFF;
+  --card-foreground:    #1A1A1A;
+  --popover:            #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary:            #C5973A;
+  --primary-foreground: #FFFFFF;
+  --secondary:          #F5F5F5;
+  --secondary-foreground: #1A1A1A;
+  --muted:              #F5F5F5;
+  --muted-foreground:   #888888;
+  --accent:             #C5973A;
+  --accent-foreground:  #FFFFFF;
+  --destructive:        #DC2626;
+  --border:             #E5E5E5;
+  --input:              #E5E5E5;
+  --ring:               #C5973A;
+  --radius:             0.375rem;
+}
+
+/* ═══════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════ */
+@layer base {
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: #FFFFFF;
+    color: #1A1A1A;
+    font-family: var(--font-inter), 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════ */
+@layer utilities {
+  .font-playfair  { font-family: var(--font-playfair),  'Playfair Display', Georgia, serif; }
+  .font-cormorant { font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif; }
+  .font-inter     { font-family: var(--font-inter), 'Inter', sans-serif; }
+}
+
+/* ═══════════════════════════════════════════
+   SECTION HEADING — style kebonbatik
+   "—————  JUDUL  —————"
+   ═══════════════════════════════════════════ */
+@layer components {
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .section-title::before,
+  .section-title::after {
+    content: '';
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: #C5973A;
+  }
+
+  .section-title span {
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #1A1A1A;
+    white-space: nowrap;
+  }
+
+  /* Card produk */
+  .product-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .product-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Badge diskon — merah seperti kebonbatik */
+  .badge-sale {
+    background: #DC2626;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.03em;
+  }
+
+  /* Tombol add to cart */
+  .btn-cart {
+    background: #1A1A1A;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.2s ease;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-cart:hover { background: #C5973A; }
+
+  /* Tombol WA */
+  .btn-whatsapp {
+    background: #25D366;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+  }
+  .btn-whatsapp:hover { background: #1DA851; }
+}
+
+/* ═══════════════════════════════════════════
+   ANIMASI
+   ═══════════════════════════════════════════ */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeInUp 0.45s ease both;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .bg-batik-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C5973A' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #F5F5F5; }
+::-webkit-scrollbar-thumb { background: #C5973A; border-radius: 3px; }
+
+/* ═══════════════════════════════════════════
+   SWIPER CUSTOM DOTS
+   ═══════════════════════════════════════════ */
+.swiper-pagination-bullet {
+  background: rgba(197,151,58,0.4) !important;
+  opacity: 1 !important;
+}
+.swiper-pagination-bullet-active {
+  background: #C5973A !important;
 }
