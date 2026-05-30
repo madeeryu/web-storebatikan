@@ -80,41 +80,43 @@ export default function AdminLoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A1A' }}>
+              <label htmlFor="email" className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A1A' }}>
                 Email
               </label>
               <div className="relative">
                 <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
+                  id="email"
+                  name="email"
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="admin@batikan.com"
                   required
-                  className="w-full pl-10 pr-4 py-2.5 text-sm border rounded-lg outline-none focus:ring-2 transition-all"
-                  style={{
-                    borderColor: '#E5E5E5',
-                    // @ts-ignore
-                    '--tw-ring-color': 'rgba(197,151,58,0.3)',
-                  }}
+                  autoComplete="email"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm border rounded-lg outline-none transition-all"
+                  style={{ borderColor: '#E5E5E5' }}
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A1A' }}>
+              <label htmlFor="password" className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A1A' }}>
                 Password
               </label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
+                  id="password"
+                  name="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-10 pr-10 py-2.5 text-sm border rounded-lg outline-none focus:ring-2 transition-all"
+                  autoComplete="current-password"
+                  className="w-full pl-10 pr-10 py-2.5 text-sm border rounded-lg outline-none transition-all"
                   style={{ borderColor: '#E5E5E5' }}
                 />
                 <button
