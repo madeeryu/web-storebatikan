@@ -294,3 +294,26 @@ export async function getReviews(filter?: 'pending' | 'approved'): Promise<Revie
   const snap = await getDocs(q)
   return snap.docs.map(d => ({ id: d.id, ...d.data() } as Review))
 }
+
+// ─── SHORT ALIASES (untuk kompatibilitas admin pages) ────────────────────────
+
+/** Alias addBanner → createBanner */
+export const createBanner = async (data: Omit<Banner, 'id'>) => addBanner(data)
+
+/** Alias addCategory → createCategory */
+export const createCategory = async (data: Omit<Category, 'id'>) => addCategory(data)
+
+/** Alias addPromo → createPromo */
+export const createPromo = async (data: Omit<Promo, 'id'>) => addPromo(data)
+
+/** Alias getStoreSettings → getSettings */
+export const getSettings = () => getStoreSettings()
+
+/** Alias updateStoreSettings → updateSettings */
+export const updateSettings = (data: Partial<StoreSettings>) => updateStoreSettings(data)
+
+/** Alias initStoreSettings → initSettings */
+export const initSettings = (data: StoreSettings) => initStoreSettings(data)
+
+/** Alias getPromos → getAllPromos (semua promo, untuk admin) */
+export const getPromos = () => getAllPromos()

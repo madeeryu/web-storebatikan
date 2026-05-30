@@ -44,7 +44,7 @@ import type { Category } from '@/types'
 const categorySchema = z.object({
   name: z.string().min(1, 'Nama kategori wajib diisi'),
   slug: z.string().min(1, 'Slug wajib diisi').regex(/^[a-z0-9-]+$/, 'Slug hanya huruf kecil, angka, dan strip'),
-  order: z.coerce.number().min(0, 'Urutan harus ≥ 0'),
+  order: z.number().min(0, 'Urutan harus ≥ 0'),
   is_active: z.boolean(),
 })
 type CategoryForm = z.infer<typeof categorySchema>
@@ -68,7 +68,7 @@ export default function AdminKategoriPage() {
   const [submitting, setSubmitting] = useState(false)
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<CategoryForm>({
-    resolver: zodResolver(categorySchema),
+    resolver: zodResolver(categorySchema) as any,
     defaultValues: { name: '', slug: '', order: 0, is_active: true },
   })
 

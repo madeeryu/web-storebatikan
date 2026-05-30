@@ -30,10 +30,10 @@ import { nanoid } from 'nanoid' // or use crypto.randomUUID()
 const schema = z.object({
   name: z.string().min(2, 'Nama minimal 2 karakter'),
   slug: z.string().min(2, 'Slug minimal 2 karakter').regex(/^[a-z0-9-]+$/, 'Slug hanya boleh huruf kecil, angka, dan tanda -'),
-  description: z.string().optional(),
+  description: z.string().default(''),
   category_id: z.string().min(1, 'Pilih kategori'),
-  price: z.coerce.number().min(1000, 'Harga minimal Rp 1.000'),
-  discount_percent: z.coerce.number().min(0).max(100),
+  price: z.number().min(1000, 'Harga minimal Rp 1.000'),
+  discount_percent: z.number().min(0).max(100),
   is_featured: z.boolean(),
   is_active: z.boolean(),
 })
@@ -68,7 +68,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
     watch,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       name: initialData?.name ?? '',
       slug: initialData?.slug ?? '',

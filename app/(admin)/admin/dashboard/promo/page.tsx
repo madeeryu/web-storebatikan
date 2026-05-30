@@ -32,7 +32,7 @@ import type { Promo, Category } from '@/types'
 // ─── Schema ─────────────────────────────────────────────────
 const promoSchema = z.object({
   name: z.string().min(1, 'Nama promo wajib diisi'),
-  discount_percent: z.coerce.number().min(1).max(99),
+  discount_percent: z.number().min(1).max(99),
   applies_to: z.enum(['all', 'category', 'product']),
   target_ids: z.array(z.string()),
   start_date: z.string().min(1, 'Tanggal mulai wajib diisi'),
@@ -79,7 +79,7 @@ export default function AdminPromoPage() {
   const [submitting, setSubmitting] = useState(false)
 
   const { register, handleSubmit, setValue, watch, reset, control, formState: { errors } } = useForm<PromoForm>({
-    resolver: zodResolver(promoSchema),
+    resolver: zodResolver(promoSchema) as any,
     defaultValues: {
       name: '', discount_percent: 10, applies_to: 'all',
       target_ids: [], start_date: '', end_date: '', is_active: true,

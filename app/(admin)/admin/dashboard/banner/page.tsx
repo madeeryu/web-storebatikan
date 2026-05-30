@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { getBanners, createBanner, updateBanner, deleteBanner } from '@/lib/firestore'
+import { getAllBanners, createBanner, updateBanner, deleteBanner } from '@/lib/firestore'
 import type { Banner } from '@/types'
 
 const bannerSchema = z.object({
@@ -29,7 +29,7 @@ const bannerSchema = z.object({
   subtitle: z.string().optional(),
   cta_text: z.string().optional(),
   cta_link: z.string().optional(),
-  order: z.coerce.number().min(0),
+  order: z.number().min(0),
   is_active: z.boolean(),
 })
 type BannerForm = z.infer<typeof bannerSchema>
@@ -44,14 +44,14 @@ export default function AdminBannerPage() {
   const [submitting, setSubmitting] = useState(false)
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<BannerForm>({
-    resolver: zodResolver(bannerSchema),
+    resolver: zodResolver(bannerSchema) as any,
     defaultValues: { title: '', subtitle: '', cta_text: '', cta_link: '', order: 0, is_active: true },
   })
 
   const fetchBanners = async () => {
     setLoading(true)
     try {
-      setBanners(await getBanners())
+      setBanners(await getAllBanners())
     } catch { toast.error('Gagal memuat banner') }
     finally { setLoading(false) }
   }

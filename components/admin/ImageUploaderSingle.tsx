@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { Upload, X, Loader2 } from 'lucide-react'
-import { uploadFile, safeFileName } from '@/lib/storage-3b'
+import { uploadFile, safeFileName } from '@/lib/storage'
 import { cn } from '@/lib/utils'
 
 interface ImageUploaderSingleProps {

@@ -48,7 +48,7 @@ export default function AdminPengaturanPage() {
   const [logoUrl, setLogoUrl] = useState('')
 
   const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<SettingsForm>({
-    resolver: zodResolver(settingsSchema),
+    resolver: zodResolver(settingsSchema) as any,
     defaultValues: {
       store_name: 'Batik AN',
       tagline: 'Warisan Budaya Modern',

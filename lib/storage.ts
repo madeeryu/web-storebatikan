@@ -65,3 +65,38 @@ export async function deleteImageByUrl(url: string): Promise<void> {
     console.warn('Could not delete image:', error)
   }
 }
+
+// ─── Generic upload dengan progress ─────────────────────────────────────────
+
+import { uploadBytesResumable } from 'firebase/storage'
+
+/** Upload file ke path tertentu dengan progress callback */
+export async function uploadFile(
+  file: File,
+  path: string,
+  onProgress?: (pct: number) => void
+): Promise<string> {
+  const storageRef = ref(storage, path)
+  return new Promise((resolve, reject) => {
+    const task = uploadBytesResumable(storageRef, file)
+    task.on(
+      'state_changed',
+      (snap) => {
+        const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100)
+        onProgress?.(pct)
+      },
+      reject,
+      async () => {
+        const url = await getDownloadURL(task.snapshot.ref)
+        resolve(url)
+      }
+    )
+  })
+}
+
+/** Buat nama file yang aman: prefix + timestamp + ekstensi */
+export function safeFileName(file: File, prefix = ''): string {
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+  const base = prefix ? `${prefix}-` : ''
+  return `${base}${Date.now()}.${ext}`
+}

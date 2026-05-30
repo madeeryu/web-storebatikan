@@ -174,8 +174,8 @@ import { useEffect, useRef, RefObject } from "react"
 
 export function useFadeInOnScroll<T extends HTMLElement = HTMLDivElement>(
   options: IntersectionObserverInit = {}
-): RefObject<T> {
-  const ref = useRef<T>(null)
+): RefObject<T | null> {
+  const ref = useRef<T | null>(null)
 
   useEffect(() => {
     const element = ref.current
