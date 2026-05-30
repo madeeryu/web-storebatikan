@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
         hostname: 'storage.googleapis.com',
         pathname: '/**',
       },
+      // Cloudinary
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
     ],
     deviceSizes: [375, 640, 768, 1024, 1280, 1440, 1920],
     imageSizes: [64, 128, 256, 384],
