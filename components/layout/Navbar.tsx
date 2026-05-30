@@ -39,11 +39,14 @@ export default function Navbar() {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 bg-white"
+        className="fixed top-0 left-0 right-0 bg-white"
         style={{
+          zIndex: 9999,
           borderBottom: '1px solid #E5E5E5',
           boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
           transition: 'box-shadow 0.3s ease',
+          isolation: 'isolate',
+          willChange: 'auto',
         }}
       >
         {/* Garis emas tipis paling atas */}
