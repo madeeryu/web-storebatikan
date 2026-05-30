@@ -53,8 +53,9 @@ export default function Footer() {
                 href="https://wa.me/6281234567890"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity hover:opacity-80"
+                className="footer-social-btn"
                 style={{ backgroundColor: '#25D366' }}
+                aria-label="WhatsApp"
               >
                 <MessageCircle size={16} color="white" />
               </a>
@@ -62,8 +63,9 @@ export default function Footer() {
                 href="https://instagram.com/batikan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity hover:opacity-80"
+                className="footer-social-btn"
                 style={{ background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)', color: 'white' }}
+                aria-label="Instagram"
               >
                 <InstagramIcon size={16} />
               </a>
@@ -78,7 +80,8 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {shopLinks.map(l => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-sm transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  <Link href={l.href} className="footer-link">
+                    <span className="footer-link-arrow">›</span>
                     {l.label}
                   </Link>
                 </li>
@@ -94,7 +97,8 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {infoLinks.map(l => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-sm transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  <Link href={l.href} className="footer-link">
+                    <span className="footer-link-arrow">›</span>
                     {l.label}
                   </Link>
                 </li>

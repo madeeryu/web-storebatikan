@@ -478,3 +478,72 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ═══════════════════════════════════════════
+   FOOTER HOVER EFFECTS
+   ═══════════════════════════════════════════ */
+
+/* ── Nav links di footer ── */
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0px;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.25s ease, gap 0.25s ease;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: #C5973A;
+  gap: 6px;
+}
+
+/* Panah kecil yang geser ke kanan saat hover */
+.footer-link-arrow {
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1;
+  color: #C5973A;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.footer-link:hover .footer-link-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Social media buttons di footer ── */
+.footer-social-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.footer-social-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.footer-social-btn:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.footer-social-btn:hover::after {
+  opacity: 1;
+}
