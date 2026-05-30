@@ -1,305 +1,162 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Plus, Search, Edit, Trash2, Filter } from 'lucide-react'
-import AdminLayout from '@/components/layout/AdminLayout'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import {
-  collection,
-  query,
-  getDocs,
-  orderBy,
-  updateDoc,
-  deleteDoc,
-  doc,
-  where,
-} from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import { Product, Category } from '@/types'
-import { formatRupiah } from '@/lib/utils'
-import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+import { useAuth } from '@/hooks/useAuth'
+import { Eye, EyeOff, Lock, Mail, Loader2 } from 'lucide-react'
 
-export default function ProdukPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [filterCategory, setFilterCategory] = useState('all')
-  const [filterStatus, setFilterStatus] = useState('all')
-  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
-  const [deleting, setDeleting] = useState(false)
+export default function AdminLoginPage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
 
-  const fetchProducts = async () => {
-    setLoading(true)
-    try {
-      const snap = await getDocs(
-        query(collection(db, 'products'), orderBy('created_at', 'desc'))
-      )
-      setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Product)))
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
+  // Jika sudah login → langsung ke dashboard
   useEffect(() => {
-    fetchProducts()
-    getDocs(query(collection(db, 'categories'))).then((snap) =>
-      setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Category)))
-    )
-  }, [])
+    if (!loading && user) {
+      router.replace('/admin/dashboard')
+    }
+  }, [user, loading, router])
 
-  const filtered = products.filter((p) => {
-    const matchSearch =
-      !search || p.name.toLowerCase().includes(search.toLowerCase())
-    const matchCategory =
-      filterCategory === 'all' || p.category_id === filterCategory
-    const matchStatus =
-      filterStatus === 'all' ||
-      (filterStatus === 'active' && p.is_active) ||
-      (filterStatus === 'inactive' && !p.is_active)
-    return matchSearch && matchCategory && matchStatus
-  })
-
-  const handleToggle = async (
-    id: string,
-    field: 'is_active' | 'is_featured',
-    value: boolean
-  ) => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setSubmitting(true)
     try {
-      await updateDoc(doc(db, 'products', id), { [field]: value })
-      setProducts((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
-      )
+      await signInWithEmailAndPassword(auth, email, password)
+      router.replace('/admin/dashboard')
     } catch {
-      toast.error('Gagal mengubah status')
+      setError('Email atau password salah. Silakan coba lagi.')
+    } finally {
+      setSubmitting(false)
     }
   }
 
-  const handleDelete = async () => {
-    if (!deleteTarget) return
-    setDeleting(true)
-    try {
-      await deleteDoc(doc(db, 'products', deleteTarget.id))
-      setProducts((prev) => prev.filter((p) => p.id !== deleteTarget.id))
-      toast.success('Produk berhasil dihapus')
-      setDeleteTarget(null)
-    } catch {
-      toast.error('Gagal menghapus produk')
-    } finally {
-      setDeleting(false)
-    }
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5EFE0' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#C5973A' }} />
+      </div>
+    )
   }
 
   return (
-    <AdminLayout>
-      <div className="space-y-5">
-        {/* Top bar */}
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-          <div className="flex flex-wrap gap-2 flex-1">
-            {/* Search */}
-            <div className="relative">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari produk..."
-                className="pl-9 w-52 border-stone-300"
-              />
-            </div>
-            {/* Category filter */}
-            <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger className="w-40 border-stone-300">
-                <SelectValue placeholder="Semua kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Kategori</SelectItem>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {/* Status filter */}
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-36 border-stone-300">
-                <SelectValue placeholder="Semua status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Status</SelectItem>
-                <SelectItem value="active">Aktif</SelectItem>
-                <SelectItem value="inactive">Nonaktif</SelectItem>
-              </SelectContent>
-            </Select>
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ backgroundColor: '#F5EFE0' }}
+    >
+      <div className="w-full max-w-sm">
+        {/* Logo & Brand */}
+        <div className="text-center mb-8">
+          <div
+            className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #C5973A, #A87C2A)', boxShadow: '0 4px 20px rgba(197,151,58,0.3)' }}
+          >
+            <span className="font-playfair text-2xl font-bold text-white">AN</span>
           </div>
-          <Link href="/admin/dashboard/produk/tambah">
-            <Button className="text-white flex items-center gap-2 whitespace-nowrap" style={{ background: 'var(--color-maroon)' }}>
-              <Plus size={16} />
-              Tambah Produk
-            </Button>
-          </Link>
+          <h1 className="font-playfair text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
+            Batik AN
+          </h1>
+          <p className="text-sm" style={{ color: '#888888' }}>Admin Panel</p>
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <div className="h-px w-12" style={{ backgroundColor: '#C5973A' }} />
+            <span style={{ color: '#C5973A' }}>✦</span>
+            <div className="h-px w-12" style={{ backgroundColor: '#C5973A' }} />
+          </div>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            {loading ? (
-              <div className="p-8 space-y-3">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 bg-stone-100 rounded-lg animate-pulse" />
-                ))}
+        {/* Card */}
+        <div className="bg-white rounded-xl shadow-sm border p-8" style={{ borderColor: 'rgba(197,151,58,0.2)' }}>
+          <h2 className="font-semibold text-lg mb-6 text-center" style={{ color: '#1A1A1A' }}>
+            Masuk ke Dashboard
+          </h2>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A1A' }}>
+                Email
+              </label>
+              <div className="relative">
+                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="admin@batikan.com"
+                  required
+                  className="w-full pl-10 pr-4 py-2.5 text-sm border rounded-lg outline-none focus:ring-2 transition-all"
+                  style={{
+                    borderColor: '#E5E5E5',
+                    // @ts-ignore
+                    '--tw-ring-color': 'rgba(197,151,58,0.3)',
+                  }}
+                />
               </div>
-            ) : filtered.length === 0 ? (
-              <div className="p-12 text-center">
-                <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Search size={28} className="text-stone-300" />
-                </div>
-                <p className="text-stone-500 font-medium">
-                  {products.length === 0 ? 'Belum ada produk' : 'Tidak ada produk yang cocok'}
-                </p>
-                {products.length === 0 && (
-                  <Link href="/admin/dashboard/produk/tambah" className="text-sm text-[#8B1A1A] hover:underline mt-1 block">
-                    Tambah produk pertama →
-                  </Link>
-                )}
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A1A' }}>
+                Password
+              </label>
+              <div className="relative">
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full pl-10 pr-10 py-2.5 text-sm border rounded-lg outline-none focus:ring-2 transition-all"
+                  style={{ borderColor: '#E5E5E5' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
-            ) : (
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b" style={{ background: 'var(--color-ivory)', borderColor: '#C9A84C30' }}>
-                    <th className="text-left px-5 py-3 text-xs uppercase tracking-wide text-stone-500 font-semibold w-12">Foto</th>
-                    <th className="text-left px-5 py-3 text-xs uppercase tracking-wide text-stone-500 font-semibold">Nama</th>
-                    <th className="text-left px-5 py-3 text-xs uppercase tracking-wide text-stone-500 font-semibold hidden md:table-cell">Kategori</th>
-                    <th className="text-left px-5 py-3 text-xs uppercase tracking-wide text-stone-500 font-semibold hidden sm:table-cell">Harga</th>
-                    <th className="text-center px-4 py-3 text-xs uppercase tracking-wide text-stone-500 font-semibold">Aktif</th>
-                    <th className="text-center px-4 py-3 text-xs uppercase tracking-wide text-stone-500 font-semibold hidden lg:table-cell">Unggulan</th>
-                    <th className="text-right px-5 py-3 text-xs uppercase tracking-wide text-stone-500 font-semibold">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((p, i) => (
-                    <tr
-                      key={p.id}
-                      className={`border-b last:border-0 hover:bg-stone-50/50 transition-colors ${
-                        i % 2 === 0 ? '' : 'bg-stone-50/30'
-                      }`}
-                    >
-                      {/* Photo */}
-                      <td className="px-5 py-3">
-                        <div className="relative w-10 h-12 rounded-md overflow-hidden bg-stone-100 flex-shrink-0">
-                          {p.images?.[0] ? (
-                            <Image src={p.images[0]} alt={p.name} fill className="object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-stone-300 text-xs">Foto</div>
-                          )}
-                        </div>
-                      </td>
-                      {/* Name */}
-                      <td className="px-5 py-3">
-                        <p className="font-medium text-stone-800 line-clamp-1">{p.name}</p>
-                        {p.discount_percent > 0 && (
-                          <Badge className="mt-0.5 text-xs" style={{ background: '#C9A84C20', color: '#6B3F2A', border: '1px solid #C9A84C40' }}>
-                            -{p.discount_percent}% diskon
-                          </Badge>
-                        )}
-                      </td>
-                      {/* Category */}
-                      <td className="px-5 py-3 text-stone-500 hidden md:table-cell">{p.category_name}</td>
-                      {/* Price */}
-                      <td className="px-5 py-3 hidden sm:table-cell font-medium" style={{ color: 'var(--color-maroon)' }}>
-                        {formatRupiah(p.price)}
-                      </td>
-                      {/* Active */}
-                      <td className="px-4 py-3 text-center">
-                        <Switch
-                          checked={p.is_active}
-                          onCheckedChange={(v) => handleToggle(p.id, 'is_active', v)}
-                        />
-                      </td>
-                      {/* Featured */}
-                      <td className="px-4 py-3 text-center hidden lg:table-cell">
-                        <Switch
-                          checked={p.is_featured}
-                          onCheckedChange={(v) => handleToggle(p.id, 'is_featured', v)}
-                        />
-                      </td>
-                      {/* Actions */}
-                      <td className="px-5 py-3">
-                        <div className="flex items-center justify-end gap-2">
-                          <Link href={`/admin/dashboard/produk/${p.id}`}>
-                            <button
-                              className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
-                              title="Edit"
-                            >
-                              <Edit size={16} />
-                            </button>
-                          </Link>
-                          <button
-                            onClick={() => setDeleteTarget(p)}
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-red-500 transition-colors"
-                            title="Hapus"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5">
+                {error}
+              </div>
             )}
-          </div>
-          {!loading && filtered.length > 0 && (
-            <div className="px-5 py-3 border-t border-stone-100 text-xs text-stone-400">
-              Menampilkan {filtered.length} dari {products.length} produk
-            </div>
-          )}
-        </div>
-      </div>
 
-      {/* Delete confirmation dialog */}
-      <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle style={{ color: 'var(--color-maroon)' }}>Hapus Produk</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-stone-600">
-            Yakin ingin menghapus produk{' '}
-            <strong>{deleteTarget?.name}</strong>? Tindakan ini tidak dapat dibatalkan.
-          </p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>
-              Batal
-            </Button>
-            <Button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="bg-red-600 hover:bg-red-700 text-white"
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-2.5 rounded-lg text-sm font-semibold text-white flex items-center justify-center gap-2 transition-opacity disabled:opacity-70 mt-2"
+              style={{ backgroundColor: '#1A1A1A' }}
             >
-              {deleting ? 'Menghapus...' : 'Hapus'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </AdminLayout>
+              {submitting ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Memverifikasi...
+                </>
+              ) : (
+                'Masuk'
+              )}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-center text-xs mt-6" style={{ color: 'rgba(0,0,0,0.35)' }}>
+          © {new Date().getFullYear()} Batik AN — Admin Only
+        </p>
+      </div>
+    </div>
   )
 }
