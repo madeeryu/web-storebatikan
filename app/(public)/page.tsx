@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { HeroBanner } from '@/components/home/HeroBanner'
 import { PromoSection } from '@/components/home/PromoSection'
@@ -19,7 +18,6 @@ export const revalidate = 60
 export default function HomePage() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
         {/* Hero Banner Slider */}
         <HeroBanner />

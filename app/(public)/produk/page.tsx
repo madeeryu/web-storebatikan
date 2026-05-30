@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { ProdukPageClient } from './ProdukPageClient'
 
@@ -14,7 +13,6 @@ export const revalidate = 60
 export default function ProdukPage() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen pb-16" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="max-w-6xl mx-auto px-4 pt-8">
           {/* Heading */}

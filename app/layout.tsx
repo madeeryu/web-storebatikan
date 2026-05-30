@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Inter, Cormorant_Garamond } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
+import Navbar from '@/components/layout/Navbar'
 import PageTransition from '@/components/layout/PageTransition'
 import './globals.css'
 
@@ -55,6 +56,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className="antialiased min-h-screen"
         style={{ backgroundColor: '#FFFFFF', color: '#1A1A1A' }}
       >
+        {/* Navbar di LUAR PageTransition agar position:fixed tidak rusak */}
+        <Navbar />
+
         <PageTransition>
           {children}
         </PageTransition>
@@ -64,16 +68,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           toastOptions={{
             duration: 3500,
             style: {
-              background: '#FDFAF5',
-              color: '#1C1C1C',
-              border: '1px solid rgba(201, 168, 76, 0.4)',
+              background: '#FFFFFF',
+              color: '#1A1A1A',
+              border: '1px solid rgba(197,151,58,0.4)',
               fontFamily: 'Inter, sans-serif',
               fontSize: '14px',
-              borderRadius: '6px',
-              boxShadow: '0 4px 20px rgba(139, 26, 26, 0.08)',
+              borderRadius: '4px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
             },
-            success: { iconTheme: { primary: '#8B1A1A', secondary: '#FDFAF5' } },
-            error:   { iconTheme: { primary: '#DC2626', secondary: '#FDFAF5' } },
+            success: { iconTheme: { primary: '#C5973A', secondary: '#FFFFFF' } },
+            error:   { iconTheme: { primary: '#DC2626', secondary: '#FFFFFF' } },
           }}
         />
       </body>

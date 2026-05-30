@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import Image from 'next/image'
-import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { getCategoryBySlug } from '@/lib/firestore'
 import { KategoriPageClient } from './KategoriPageClient'
@@ -28,7 +27,6 @@ export default async function KategoriPage({ params }: Props) {
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen pb-16" style={{ backgroundColor: '#FFFFFF' }}>
         {/* Category Header Banner */}
         <div

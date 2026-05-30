@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { getProductBySlug, getActivePromos, getFinalPrice } from '@/lib/firestore'
 import { DetailProdukClient } from './DetailProdukClient'
@@ -37,7 +36,6 @@ export default async function DetailProdukPage({ params }: Props) {
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen pb-16" style={{ backgroundColor: '#FFFFFF' }}>
         <DetailProdukClient
           product={product}

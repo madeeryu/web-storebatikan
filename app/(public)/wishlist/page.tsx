@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Heart, ArrowLeft } from 'lucide-react'
-import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { useWishlist } from '@/hooks/useWishlist'
 import { getProductsByIds } from '@/lib/firestore'
@@ -32,7 +31,6 @@ export default function WishlistPage() {
   if (!mounted || loading) {
     return (
       <>
-        <Navbar />
         <main className="min-h-screen pt-8" style={{ backgroundColor: '#FFFFFF' }}>
           <div className="max-w-6xl mx-auto px-4">
             <div className="h-8 bg-gray-200 animate-pulse rounded w-48 mb-8" />
@@ -56,7 +54,6 @@ export default function WishlistPage() {
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen pb-16" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="max-w-6xl mx-auto px-4 pt-8">
           {/* Header */}

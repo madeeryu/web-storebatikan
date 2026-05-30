@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ShoppingCart, ArrowLeft, MessageCircle } from 'lucide-react'
-import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { useCart } from '@/hooks/useCart'
 import { CartItem } from '@/components/cart/CartItem'
@@ -78,7 +77,6 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <>
-        <Navbar />
         <main className="min-h-screen flex flex-col items-center justify-center px-4 text-center" style={{ backgroundColor: '#FFFFFF' }}>
           <ShoppingCart size={80} className="mb-6" style={{ color: 'rgba(201,168,76,0.4)' }} />
           <h1 className="font-playfair text-2xl font-bold mb-2" style={{ color: '#8B1A1A' }}>
@@ -101,7 +99,6 @@ export default function CartPage() {
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen pb-16" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="max-w-4xl mx-auto px-4 pt-8">
           {/* Header */}
