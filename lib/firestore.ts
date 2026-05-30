@@ -260,3 +260,37 @@ export function getFinalPrice(product: Product, promos: Promo[]): { finalPrice: 
   const finalPrice = best > 0 ? Math.round(product.price * (1 - best / 100)) : product.price
   return { finalPrice, discountPercent: best }
 }
+
+// ─── ADMIN HELPERS ───────────────────────────────────────
+
+/** Alias createProduct (sama dengan addProduct, tapi pakai serverTimestamp) */
+export async function createProduct(data: Omit<Product, 'id' | 'created_at'>) {
+  const { serverTimestamp } = await import('firebase/firestore')
+  return addDoc(collection(db, 'products'), { ...data, created_at: serverTimestamp() })
+}
+
+/** Approve sebuah review */
+export async function approveReview(id: string) {
+  return updateDoc(doc(db, 'reviews', id), { is_approved: true })
+}
+
+/** Bulk approve semua review yang pending */
+export async function approveAllPendingReviews() {
+  const reviews = await getPendingReviews()
+  await Promise.all(reviews.map(r => approveReview(r.id)))
+}
+
+/** Buat/overwrite dokumen settings (untuk setup pertama kali) */
+export async function initStoreSettings(data: StoreSettings) {
+  const { setDoc } = await import('firebase/firestore')
+  return setDoc(doc(db, 'settings', 'config'), data)
+}
+
+/** Alias getReviews untuk admin (filter: pending | approved | all) */
+export async function getReviews(filter?: 'pending' | 'approved'): Promise<Review[]> {
+  if (filter === 'pending') return getPendingReviews()
+  if (filter === 'approved') return getApprovedReviews()
+  const q = query(collection(db, 'reviews'), orderBy('created_at', 'desc'))
+  const snap = await getDocs(q)
+  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Review))
+}
