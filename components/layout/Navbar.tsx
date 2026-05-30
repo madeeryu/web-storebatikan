@@ -63,17 +63,10 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-sm font-medium transition-colors relative group"
+                    className={`nav-link text-sm font-medium${isActive(link.href) ? ' active' : ''}`}
                     style={{ color: isActive(link.href) ? '#C5973A' : '#1A1A1A' }}
                   >
                     {link.label}
-                    <span
-                      className="absolute -bottom-0.5 left-0 h-px transition-all duration-300"
-                      style={{
-                        width: isActive(link.href) ? '100%' : '0%',
-                        backgroundColor: '#C5973A',
-                      }}
-                    />
                   </Link>
                 ))}
               </nav>

@@ -182,6 +182,194 @@
 }
 
 /* ═══════════════════════════════════════════
+   HOVER EFFECTS — KERATON BATIK AESTHETIC
+   ═══════════════════════════════════════════ */
+
+/* ── Product Card ── */
+.product-card {
+  position: relative;
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: box-shadow 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+}
+
+/* Garis emas dari bawah naik saat hover */
+.product-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #C5973A, #D4AE5A, #C5973A, transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.4s ease;
+  z-index: 2;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 32px rgba(197, 151, 58, 0.15), 0 2px 8px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+  border-color: rgba(197, 151, 58, 0.5);
+}
+
+.product-card:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Shimmer gold pada gambar produk saat hover ── */
+.product-img-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-img-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 70%
+  );
+  transform: skewX(-15deg);
+  transition: none;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.product-card:hover .product-img-wrap::before {
+  left: 150%;
+  transition: left 0.65s ease;
+}
+
+/* ── Tombol wishlist muncul smooth ── */
+.wishlist-btn {
+  opacity: 0;
+  transform: scale(0.8) translateY(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.product-card:hover .wishlist-btn {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* ── Category card ── */
+.category-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid #E5E5E5;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Overlay gelap dengan ornamen emas saat hover */
+.category-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(26, 26, 26, 0.15) 60%,
+    rgba(26, 26, 26, 0.6) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+/* Border emas muncul dari sudut */
+.category-card::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(197, 151, 58, 0);
+  transition: border-color 0.4s ease;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.category-card:hover {
+  border-color: rgba(197, 151, 58, 0.6);
+  box-shadow: 0 8px 32px rgba(197, 151, 58, 0.2);
+}
+
+.category-card:hover::before { opacity: 1; }
+.category-card:hover::after  { border-color: rgba(197, 151, 58, 0.5); }
+
+/* ── Nav links — underline emas dari tengah ── */
+.nav-link {
+  position: relative;
+  transition: color 0.25s ease;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: #C5973A;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+  left: 0;
+}
+
+/* ── Tombol primary — gold shimmer ── */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: #1A1A1A;
+  color: #FFFFFF;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(197, 151, 58, 0.3) 50%,
+    transparent 80%
+  );
+  transform: skewX(-15deg);
+  transition: none;
+}
+.btn-primary:hover {
+  background: #C5973A;
+  box-shadow: 0 4px 16px rgba(197, 151, 58, 0.35);
+}
+.btn-primary:hover::before {
+  left: 150%;
+  transition: left 0.5s ease;
+}
+
+/* ── Section divider ornamen ── */
+@keyframes goldPulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+.ornament-diamond {
+  animation: goldPulse 3s ease infinite;
+}
+
+/* ═══════════════════════════════════════════
    ANIMASI
    ═══════════════════════════════════════════ */
 @layer utilities {

@@ -52,7 +52,7 @@ export function CategoryGrid() {
               <Link
                 key={cat.id}
                 href={`/kategori/${cat.slug}`}
-                className="group relative overflow-hidden rounded-lg border border-[var(--color-gold)]/20 hover:border-[var(--color-gold)]/60 transition-all duration-300"
+                className="category-card group"
               >
                 <div className="relative aspect-square overflow-hidden bg-gray-100">
                   {cat.image ? (
@@ -66,8 +66,6 @@ export function CategoryGrid() {
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-[var(--color-maroon)]/20 to-[var(--color-gold)]/20" />
                   )}
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 <div className="p-3 bg-[var(--color-ivory)]">
@@ -75,9 +73,6 @@ export function CategoryGrid() {
                     {cat.name}
                   </h3>
                 </div>
-
-                {/* Gold bottom border on hover */}
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-gold)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
               </Link>
             ))}
           </div>

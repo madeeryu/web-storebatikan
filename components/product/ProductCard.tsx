@@ -27,7 +27,7 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
 
   return (
     <div
-      className="product-card group relative bg-[var(--color-ivory)] rounded-lg overflow-hidden border border-[var(--color-gold)]/20 hover:border-[var(--color-gold)]/60 transition-all duration-300 hover:shadow-lg hover:shadow-[var(--color-gold)]/10"
+      className="product-card group relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -38,7 +38,7 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
           e.stopPropagation()
           toggle(product.id)
         }}
-        className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm transition-all duration-200 hover:bg-white hover:scale-110"
+        className="wishlist-btn absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm hover:bg-white"
         aria-label={wishlisted ? 'Hapus dari wishlist' : 'Tambah ke wishlist'}
       >
         <Heart
@@ -63,7 +63,7 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
 
       {/* Image */}
       <Link href={`/produk/${product.slug}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+        <div className="product-img-wrap relative aspect-[3/4] overflow-hidden bg-gray-100">
           <Image
             src={hovered && hoverImage !== mainImage ? hoverImage : mainImage}
             alt={product.name}
