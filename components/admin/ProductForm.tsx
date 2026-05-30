@@ -190,8 +190,8 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
           <div className="space-y-1.5">
             <Label style={labelStyle}>Kategori *</Label>
             <Select
-              defaultValue={initialData?.category_id}
-              onValueChange={(v) => setValue('category_id', v)}
+              value={watch('category_id') || ''}
+              onValueChange={(v) => setValue('category_id', v, { shouldValidate: true })}
             >
               <SelectTrigger className={fieldStyle}>
                 <SelectValue placeholder="Pilih kategori" />
