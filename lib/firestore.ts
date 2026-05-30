@@ -28,7 +28,7 @@ export async function getProducts(constraints: QueryConstraint[] = []) {
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const q = query(collection(db, 'products'), where('slug', '==', slug), where('is_active', '==', true))
+  const q = query(collection(db, 'products'), where('slug', '==', slug), limit(1))
   const snapshot = await getDocs(q)
   if (snapshot.empty) return null
   const d = snapshot.docs[0]
