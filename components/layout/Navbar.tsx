@@ -106,24 +106,28 @@ export default function Navbar() {
                 {/* Search */}
                 <button
                   onClick={() => setSearchOpen(!searchOpen)}
-                  className="p-1.5 rounded transition-colors hover:text-[#C5973A]"
+                  className="navbar-icon-btn group relative p-1.5"
                   style={{ color: '#1A1A1A' }}
                   aria-label="Cari"
                 >
-                  <Search size={18} />
+                  <span className="navbar-icon-bg" />
+                  <Search size={18} className="relative z-10 transition-colors duration-200 group-hover:text-[#C5973A]" />
+                  <span className="navbar-icon-tooltip">Cari</span>
                 </button>
 
                 {/* Wishlist */}
                 <Link
                   href="/wishlist"
-                  className="relative p-1.5 rounded transition-colors hover:text-[#C5973A]"
+                  className="navbar-icon-btn group relative p-1.5"
                   style={{ color: '#1A1A1A' }}
                   aria-label="Wishlist"
                 >
-                  <Heart size={18} />
+                  <span className="navbar-icon-bg" />
+                  <Heart size={18} className="relative z-10 transition-colors duration-200 group-hover:text-[#C5973A]" />
+                  <span className="navbar-icon-tooltip">Wishlist</span>
                   {wishlistCount > 0 && (
                     <span
-                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold text-white"
+                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold text-white z-20"
                       style={{ backgroundColor: '#C5973A', fontSize: '10px' }}
                     >
                       {wishlistCount > 9 ? '9+' : wishlistCount}
@@ -134,14 +138,16 @@ export default function Navbar() {
                 {/* Cart */}
                 <Link
                   href="/cart"
-                  className="relative p-1.5 rounded transition-colors hover:text-[#C5973A]"
+                  className="navbar-icon-btn group relative p-1.5"
                   style={{ color: '#1A1A1A' }}
                   aria-label="Keranjang"
                 >
-                  <ShoppingCart size={18} />
+                  <span className="navbar-icon-bg" />
+                  <ShoppingCart size={18} className="relative z-10 transition-colors duration-200 group-hover:text-[#C5973A]" />
+                  <span className="navbar-icon-tooltip">Keranjang</span>
                   {cartCount > 0 && (
                     <span
-                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold text-white"
+                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold text-white z-20"
                       style={{ backgroundColor: '#C5973A', fontSize: '10px' }}
                     >
                       {cartCount > 9 ? '9+' : cartCount}
