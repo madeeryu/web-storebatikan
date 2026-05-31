@@ -5,11 +5,12 @@ import { getProductBySlug, getActivePromos, getFinalPrice } from '@/lib/firestor
 import { DetailProdukClient } from './DetailProdukClient'
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug).catch(() => null)
+  const { slug } = await params
+  const product = await getProductBySlug(slug).catch(() => null)
   if (!product) return { title: 'Produk tidak ditemukan — Batik AN' }
 
   return {
@@ -25,8 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const revalidate = 60
 
 export default async function DetailProdukPage({ params }: Props) {
+  const { slug } = await params
   const [product, promos] = await Promise.all([
-    getProductBySlug(params.slug).catch(() => null),
+    getProductBySlug(slug).catch(() => null),
     getActivePromos().catch(() => []),
   ])
 

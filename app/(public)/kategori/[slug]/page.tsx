@@ -7,11 +7,12 @@ import { getCategoryBySlug } from '@/lib/firestore'
 import { KategoriPageClient } from './KategoriPageClient'
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const cat = await getCategoryBySlug(params.slug).catch(() => null)
+  const { slug } = await params
+  const cat = await getCategoryBySlug(slug).catch(() => null)
   if (!cat) return { title: 'Kategori tidak ditemukan — Batik AN' }
   return {
     title: `${cat.name} — Batik AN`,
@@ -22,7 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const revalidate = 60
 
 export default async function KategoriPage({ params }: Props) {
-  const category = await getCategoryBySlug(params.slug).catch(() => null)
+  const { slug } = await params
+  const category = await getCategoryBySlug(slug).catch(() => null)
   if (!category) notFound()
 
   return (
