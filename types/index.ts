@@ -89,6 +89,7 @@ export interface StoreSettings {
   whatsapp_message_template?: string
   instagram: string                 // tanpa @
   logo_url: string                  // URL Firebase Storage
+  address?: string                  // alamat pabrik/toko, tampil di footer
 }
 
 // Untuk filter halaman produk
