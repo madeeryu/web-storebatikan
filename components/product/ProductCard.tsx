@@ -64,13 +64,26 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
       {/* Image */}
       <Link href={`/produk/${product.slug}`} className="block">
         <div className="product-img-wrap relative aspect-[3/4] overflow-hidden bg-gray-100">
+          {/* Gambar utama */}
           <Image
-            src={hovered && hoverImage !== mainImage ? hoverImage : mainImage}
+            src={mainImage}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
+          {/* Gambar kedua — crossfade saat hover */}
+          {hoverImage !== mainImage && (
+            <Image
+              src={hoverImage}
+              alt={product.name}
+              fill
+              className={`object-cover transition-opacity duration-500 group-hover:scale-105 ${
+                hovered ? 'opacity-100' : 'opacity-0'
+              }`}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            />
+          )}
         </div>
 
         {/* Info */}
