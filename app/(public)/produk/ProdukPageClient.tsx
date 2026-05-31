@@ -103,11 +103,12 @@ export function ProdukPageClient() {
     promos.length ? getFinalPrice(product, promos).discountPercent : product.discount_percent
 
   return (
-    <div>
-      {/* Filter bar — full width di mobile */}
+    <div className="flex gap-6 items-start">
+      {/* Filter sidebar — kiri di desktop, drawer di mobile */}
       <ProductFilter />
 
-      <div className="mt-4">
+      {/* Area produk — mengisi sisa lebar */}
+      <div className="flex-1 min-w-0">
         {/* Count */}
         {!loading && totalCount > 0 && (
           <p className="text-sm text-gray-500 mb-4">
@@ -116,7 +117,7 @@ export function ProdukPageClient() {
         )}
 
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="rounded-lg overflow-hidden">
                 <div className="aspect-[3/4] bg-gray-200 animate-pulse" />
@@ -144,7 +145,7 @@ export function ProdukPageClient() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
               {products.map(product => (
                 <ProductCard
                   key={product.id}
