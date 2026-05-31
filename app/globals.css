@@ -548,19 +548,4 @@
   opacity: 1;
 }
 
-/* ═══════════════════════════════════════════
-   NAVBAR SCROLL BOUNCE EFFECT
-   ═══════════════════════════════════════════ */
-
-@keyframes navBounce {
-  0%   { transform: translateY(-6px); }
-  40%  { transform: translateY(3px); }
-  65%  { transform: translateY(-2px); }
-  82%  { transform: translateY(1px); }
-  93%  { transform: translateY(-0.5px); }
-  100% { transform: translateY(0); }
-}
-
-.navbar-scrolled {
-  animation: navBounce 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
+/* Navbar scroll effect handled inline in Navbar.tsx via React scrolled state */

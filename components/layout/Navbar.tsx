@@ -39,22 +39,36 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 bg-white ${scrolled ? 'navbar-scrolled' : ''}`}
+        className="fixed top-0 left-0 right-0"
         style={{
           zIndex: 9999,
-          borderBottom: '1px solid #E5E5E5',
-          boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.1)' : 'none',
+          backgroundColor: scrolled ? 'rgba(255,255,255,0.92)' : '#FFFFFF',
+          backdropFilter: scrolled ? 'blur(12px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(197,151,58,0.15)' : '1px solid #E5E5E5',
+          boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.07)' : 'none',
           isolation: 'isolate',
-          willChange: 'auto',
+          transition: 'background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease',
         }}
       >
-        {/* Garis emas tipis paling atas */}
-        <div style={{ height: '3px', background: 'linear-gradient(90deg, #C5973A, #D4AE5A, #C5973A)' }} />
+        {/* Garis emas tipis paling atas — mengecil saat scroll */}
+        <div style={{
+          height: scrolled ? '2px' : '3px',
+          background: 'linear-gradient(90deg, #C5973A, #D4AE5A, #C5973A)',
+          transition: 'height 0.4s ease',
+        }} />
 
         {/* DESKTOP NAVBAR */}
         <div className="hidden md:block">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="relative flex items-center h-16">
+            {/* Tinggi navbar mengecil saat scroll */}
+            <div
+              className="relative flex items-center"
+              style={{
+                height: scrolled ? '52px' : '64px',
+                transition: 'height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            >
 
               {/* KIRI — Nav links */}
               <nav className="flex items-center gap-6 flex-1">
@@ -70,9 +84,16 @@ export default function Navbar() {
                 ))}
               </nav>
 
-              {/* TENGAH — Logo */}
+              {/* TENGAH — Logo mengecil saat scroll */}
               <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center group">
-                <div className="relative w-12 h-12">
+                <div
+                  className="relative"
+                  style={{
+                    width: scrolled ? '36px' : '48px',
+                    height: scrolled ? '36px' : '48px',
+                    transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                >
                   {!logoError ? (
                     <Image
                       src="/logo.png"
@@ -93,8 +114,16 @@ export default function Navbar() {
                   )}
                 </div>
                 <span
-                  className="font-playfair text-xs font-semibold tracking-widest mt-0.5"
-                  style={{ color: '#1A1A1A', letterSpacing: '0.15em' }}
+                  className="font-playfair font-semibold tracking-widest"
+                  style={{
+                    color: '#1A1A1A',
+                    letterSpacing: '0.15em',
+                    fontSize: scrolled ? '0' : '0.75rem',
+                    opacity: scrolled ? 0 : 1,
+                    marginTop: scrolled ? '0' : '2px',
+                    transition: 'font-size 0.4s ease, opacity 0.3s ease, margin-top 0.4s ease',
+                    overflow: 'hidden',
+                  }}
                 >
                   BATIK AN
                 </span>
@@ -258,6 +287,7 @@ export default function Navbar() {
       </header>
 
       {/* Spacer */}
+      {/* Spacer menyesuaikan tinggi navbar (garis emas 3px + navbar 64px) */}
       <div className="h-[67px] md:h-[71px]" />
     </>
   )
