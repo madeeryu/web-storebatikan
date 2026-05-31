@@ -7,6 +7,7 @@ import { Minus, Plus, ShoppingCart, Heart, ChevronDown } from 'lucide-react'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { VariantSelector } from '@/components/product/VariantSelector'
 import { ReviewSection } from '@/components/product/ReviewSection'
+import { RelatedProducts } from '@/components/product/RelatedProducts'
 import { useCart } from '@/hooks/useCart'
 import { useWishlist } from '@/hooks/useWishlist'
 import { formatRupiah } from '@/lib/utils'
@@ -212,6 +213,9 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
 
         {/* Review Section */}
         <ReviewSection productId={product.id} productName={product.name} />
+
+        {/* Rekomendasi produk kategori sama */}
+        <RelatedProducts categoryId={product.category_id} currentProductId={product.id} />
       </div>
     </div>
   )
