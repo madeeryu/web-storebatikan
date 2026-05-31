@@ -28,6 +28,9 @@ const settingsSchema = z.object({
   instagram: z.string().optional(),
   whatsapp_message_template: z.string().optional(),
   address: z.string().optional(),
+  about_story: z.string().optional(),
+  about_vision: z.string().optional(),
+  about_mission: z.string().optional(),
 })
 type SettingsForm = z.infer<typeof settingsSchema>
 
@@ -57,6 +60,9 @@ export default function AdminPengaturanPage() {
       instagram: '',
       whatsapp_message_template: DEFAULT_WA_TEMPLATE,
       address: '',
+      about_story: '',
+      about_vision: '',
+      about_mission: '',
     },
   })
 
@@ -75,6 +81,9 @@ export default function AdminPengaturanPage() {
             instagram: data.instagram ?? '',
             whatsapp_message_template: data.whatsapp_message_template ?? DEFAULT_WA_TEMPLATE,
             address: data.address ?? '',
+            about_story: data.about_story ?? '',
+            about_vision: data.about_vision ?? '',
+            about_mission: data.about_mission ?? '',
           })
           setLogoUrl(data.logo_url ?? '')
         }
@@ -96,6 +105,9 @@ export default function AdminPengaturanPage() {
         instagram: data.instagram ?? '',
         whatsapp_message_template: data.whatsapp_message_template ?? DEFAULT_WA_TEMPLATE,
         address: data.address ?? '',
+        about_story: data.about_story ?? '',
+        about_vision: data.about_vision ?? '',
+        about_mission: data.about_mission ?? '',
         logo_url: logoUrl,
       }
       // initSettings menggunakan setDoc (create or overwrite)
@@ -250,6 +262,51 @@ export default function AdminPengaturanPage() {
                   <li><code className="bg-amber-100 px-1 rounded">{'{catatan}'}</code> — catatan/pesan dari pembeli</li>
                 </ul>
               </div>
+            </div>
+          </div>
+
+          {/* ── Section: Halaman Tentang Kami ── */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-5">
+            <div>
+              <h2 className="font-semibold text-[#1C1C1C]">Halaman Tentang Kami</h2>
+              <p className="text-xs text-gray-400 mt-1">
+                Konten ini tampil di halaman /tentang. Kosongkan jika belum ingin ditampilkan.
+              </p>
+            </div>
+            <Separator />
+
+            {/* Cerita */}
+            <div className="space-y-1.5">
+              <Label htmlFor="about_story">Cerita Kami</Label>
+              <Textarea
+                id="about_story"
+                {...register('about_story')}
+                rows={6}
+                placeholder="Ceritakan sejarah, asal-usul, dan misi toko batik Anda..."
+              />
+            </div>
+
+            {/* Visi */}
+            <div className="space-y-1.5">
+              <Label htmlFor="about_vision">Visi</Label>
+              <Textarea
+                id="about_vision"
+                {...register('about_vision')}
+                rows={2}
+                placeholder="cth: Menjadi pelopor batik modern yang melestarikan warisan budaya."
+              />
+            </div>
+
+            {/* Misi */}
+            <div className="space-y-1.5">
+              <Label htmlFor="about_mission">Misi</Label>
+              <Textarea
+                id="about_mission"
+                {...register('about_mission')}
+                rows={4}
+                placeholder="Tulis satu poin misi per baris..."
+              />
+              <p className="text-xs text-gray-400">Tulis satu poin misi per baris (Enter untuk baris baru).</p>
             </div>
           </div>
 

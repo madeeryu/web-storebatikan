@@ -90,6 +90,9 @@ export interface StoreSettings {
   instagram: string                 // tanpa @
   logo_url: string                  // URL Firebase Storage
   address?: string                  // alamat pabrik/toko, tampil di footer
+  about_story?: string              // cerita "Tentang Kami"
+  about_vision?: string             // visi
+  about_mission?: string            // misi (pisahkan tiap poin dengan baris baru)
 }
 
 // Untuk filter halaman produk
