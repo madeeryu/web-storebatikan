@@ -289,7 +289,7 @@ export default function AdminKategoriPage() {
             {/* Order */}
             <div className="space-y-1.5">
               <Label htmlFor="order">Urutan Tampil</Label>
-              <Input id="order" type="number" {...register('order')} min={0} className="w-24" />
+              <Input id="order" type="number" {...register('order', { valueAsNumber: true })} min={0} className="w-24" />
             </div>
 
             {/* Is Active */}

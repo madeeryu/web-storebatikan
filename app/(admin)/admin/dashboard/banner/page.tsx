@@ -230,7 +230,7 @@ export default function AdminBannerPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="b-order">Urutan di Slider</Label>
-                  <Input id="b-order" type="number" {...register('order')} min={0} className="w-24" />
+                  <Input id="b-order" type="number" {...register('order', { valueAsNumber: true })} min={0} className="w-24" />
                 </div>
                 <div className="flex items-center gap-3">
                   <Switch

@@ -260,7 +260,7 @@ export default function AdminPromoPage() {
             <div className="space-y-1.5">
               <Label>Persentase Diskon <span className="text-red-500">*</span></Label>
               <div className="flex items-center gap-2">
-                <Input type="number" {...register('discount_percent')} min={1} max={99} className="w-24" />
+                <Input type="number" {...register('discount_percent', { valueAsNumber: true })} min={1} max={99} className="w-24" />
                 <span className="text-gray-500">%</span>
               </div>
               {errors.discount_percent && <p className="text-xs text-red-500">Masukkan angka 1–99</p>}
