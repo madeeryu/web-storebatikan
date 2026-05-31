@@ -29,19 +29,39 @@ export function VariantSelector({
             )}
           </p>
           <div className="flex gap-2 flex-wrap">
-            {colors.map(color => (
-              <button
-                key={color.name}
-                onClick={() => onColorChange(color.name)}
-                title={color.name}
-                className={`relative w-8 h-8 rounded-full transition-all duration-200 ${
-                  selectedColor === color.name
-                    ? 'ring-2 ring-offset-2 ring-[var(--color-maroon)] scale-110'
-                    : 'hover:scale-105'
-                }`}
-                style={{ backgroundColor: color.hex_code }}
-              />
-            ))}
+            {colors.map(color => {
+              const thumb = color.images?.[0]
+              const isSelected = selectedColor === color.name
+              return (
+                <button
+                  key={color.name}
+                  onClick={() => onColorChange(color.name)}
+                  title={color.name}
+                  className={`flex items-center gap-2 pr-3 rounded-lg border transition-all duration-200 ${
+                    isSelected
+                      ? 'border-[var(--color-maroon)] text-[var(--color-maroon)] bg-[var(--color-maroon)]/5'
+                      : 'border-gray-300 text-gray-600 hover:border-[var(--color-maroon)]'
+                  }`}
+                  style={!thumb ? undefined : {}}
+                >
+                  {/* Thumbnail foto warna (fallback ke lingkaran hex) */}
+                  {thumb ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={thumb}
+                      alt={color.name}
+                      className="w-9 h-9 rounded-l-lg object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <span
+                      className="w-9 h-9 rounded-l-lg flex-shrink-0"
+                      style={{ backgroundColor: color.hex_code }}
+                    />
+                  )}
+                  <span className="text-sm font-medium pl-1 py-1.5">{color.name}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
