@@ -48,6 +48,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </PageTransition>
 
+        <FloatingWhatsApp />
+
         <Toaster
           position="top-center"
           toastOptions={{
