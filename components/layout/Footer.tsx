@@ -1,5 +1,9 @@
+'use client'
+
 import Link from 'next/link'
-import { MessageCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { MessageCircle, MapPin } from 'lucide-react'
+import { getStoreSettings } from '@/lib/firestore'
 
 function InstagramIcon({ size = 16 }: { size?: number }) {
   return (
@@ -26,6 +30,13 @@ const infoLinks = [
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const [address, setAddress] = useState('')
+
+  useEffect(() => {
+    getStoreSettings()
+      .then((s) => { if (s?.address) setAddress(s.address) })
+      .catch(() => {})
+  }, [])
 
   return (
     <footer style={{ backgroundColor: '#1A1A1A', color: '#FFFFFF' }}>
@@ -43,10 +54,18 @@ export default function Footer() {
             <p className="font-cormorant italic text-base mb-4" style={{ color: 'rgba(197,151,58,0.7)' }}>
               Warisan Budaya Modern
             </p>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Menghadirkan koleksi batik pilihan dengan sentuhan modern.
               Setiap helai kain mengandung cerita dan kekayaan budaya nusantara.
             </p>
+
+            {/* Alamat */}
+            {address && (
+              <div className="flex items-start gap-2 mb-6 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                <MapPin size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#C5973A' }} />
+                <span className="leading-relaxed whitespace-pre-line">{address}</span>
+              </div>
+            )}
             {/* Social */}
             <div className="flex gap-3">
               <a
