@@ -24,6 +24,7 @@ export function ProdukPageClient() {
   const maxPrice = Number(params.get('max')) || 9_999_999
   const sort = params.get('sort') || 'terbaru'
   const page = Number(params.get('halaman')) || 1
+  const q = (params.get('q') || '').trim().toLowerCase()
 
   const load = useCallback(async () => {
     setLoading(true)

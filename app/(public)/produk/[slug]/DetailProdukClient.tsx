@@ -34,9 +34,12 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
   const wishlisted = isWishlisted(product.id)
   const hasVariants = (product.variants?.colors?.length ?? 0) > 0 || (product.variants?.sizes?.length ?? 0) > 0
 
-  // Galeri menyesuaikan warna terpilih (jika warna punya foto sendiri)
+  // Galeri SELALU menampilkan semua foto produk.
+  // Saat warna dipilih, galeri lompat ke foto pertama warna itu.
+  const allImages = product.images || []
   const colorObj = product.variants?.colors?.find((c) => c.name === selectedColor)
-  const displayImages = colorObj?.images?.length ? colorObj.images : (product.images || [])
+  const colorFirstImage = colorObj?.images?.[0]
+  const initialImageIndex = colorFirstImage ? Math.max(0, allImages.indexOf(colorFirstImage)) : 0
 
   function handleAddToCart() {
     addItem({
@@ -86,7 +89,7 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
           {/* Gallery — key reset saat warna ganti */}
-          <ProductGallery key={selectedColor} images={displayImages} productName={product.name} />
+          <ProductGallery key={selectedColor} images={allImages} initialIndex={initialImageIndex} productName={product.name} />
 
           {/* Info */}
           <div className="space-y-5">
