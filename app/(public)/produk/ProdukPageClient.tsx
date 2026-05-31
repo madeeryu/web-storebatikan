@@ -65,6 +65,15 @@ export function ProdukPageClient() {
 
       let all = await getProducts(constraints as any)
 
+      // Filter pencarian (cocokkan nama / kategori)
+      if (q) {
+        all = all.filter(
+          p =>
+            p.name.toLowerCase().includes(q) ||
+            (p.category_name || '').toLowerCase().includes(q)
+        )
+      }
+
       // Client-side filter harga
       all = all.filter(p => {
         const { finalPrice } = getFinalPrice(p, activePromos)

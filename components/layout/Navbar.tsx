@@ -4,9 +4,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { ShoppingCart, Heart, Search, Menu, X, ChevronDown } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useCart } from '@/hooks/useCart'
 import { useWishlist } from '@/hooks/useWishlist'
+import { getProducts } from '@/lib/firestore'
+import { formatRupiah } from '@/lib/utils'
+import { where } from 'firebase/firestore'
+import type { Product } from '@/types'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -26,6 +30,42 @@ export default function Navbar() {
   // Badge hanya dirender setelah mount agar tidak hydration mismatch (data dari localStorage)
   const cartCount = mounted ? getTotalItems() : 0
   const wishlistCount = mounted ? wishlist.length : 0
+  const router = useRouter()
+
+  // ── Search state ──
+  const [searchQuery, setSearchQuery] = useState('')
+  const [allProducts, setAllProducts] = useState<Product[]>([])
+  const searchResults =
+    searchQuery.trim().length > 0
+      ? allProducts
+          .filter(
+            (p) =>
+              p.name.toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
+              (p.category_name || '').toLowerCase().includes(searchQuery.trim().toLowerCase())
+          )
+          .slice(0, 6)
+      : []
+
+  useEffect(() => {
+    if (searchOpen && allProducts.length === 0) {
+      getProducts([where('is_active', '==', true)]).then(setAllProducts).catch(console.error)
+    }
+  }, [searchOpen, allProducts.length])
+
+  function submitSearch(e: React.FormEvent) {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    if (!q) return
+    setSearchOpen(false)
+    setSearchQuery('')
+    router.push(`/produk?q=${encodeURIComponent(q)}`)
+  }
+
+  function goToProduct(slug: string) {
+    setSearchOpen(false)
+    setSearchQuery('')
+    router.push(`/produk/${slug}`)
+  }
 
   useEffect(() => { setMounted(true) }, [])
 
