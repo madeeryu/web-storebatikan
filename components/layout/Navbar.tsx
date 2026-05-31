@@ -156,7 +156,7 @@ export default function Navbar() {
                   {wishlistCount > 0 && (
                     <span
                       className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-bold z-20 shadow-md"
-                      style={{ backgroundColor: '#C5973A', fontSize: '10px', border: '2px solid #FFFFFF' }}
+                      style={{ backgroundColor: '#DC2626', fontSize: '10px', border: '2px solid #FFFFFF' }}
                     >
                       {wishlistCount > 9 ? '9+' : wishlistCount}
                     </span>
@@ -248,7 +248,7 @@ export default function Navbar() {
                 {wishlistCount > 0 && (
                   <span
                     className="absolute top-0 right-0 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-bold leading-none shadow-md"
-                    style={{ backgroundColor: '#C5973A', fontSize: '10px', border: '2px solid #FFFFFF' }}
+                    style={{ backgroundColor: '#DC2626', fontSize: '10px', border: '2px solid #FFFFFF' }}
                   >
                     {wishlistCount > 9 ? '9+' : wishlistCount}
                   </span>
