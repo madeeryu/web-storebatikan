@@ -31,6 +31,10 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
   const wishlisted = isWishlisted(product.id)
   const hasVariants = (product.variants?.colors?.length ?? 0) > 0 || (product.variants?.sizes?.length ?? 0) > 0
 
+  // Galeri menyesuaikan warna terpilih (jika warna punya foto sendiri)
+  const colorObj = product.variants?.colors?.find((c) => c.name === selectedColor)
+  const displayImages = colorObj?.images?.length ? colorObj.images : (product.images || [])
+
   function handleAddToCart() {
     addItem({
       product_id: product.id,
@@ -62,8 +66,8 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
         </nav>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {/* Gallery */}
-          <ProductGallery images={product.images || []} productName={product.name} />
+          {/* Gallery — key reset saat warna ganti */}
+          <ProductGallery key={selectedColor} images={displayImages} productName={product.name} />
 
           {/* Info */}
           <div className="space-y-5">

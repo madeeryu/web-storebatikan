@@ -49,7 +49,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
   const router = useRouter()
   const [categories, setCategories] = useState<Category[]>([])
   const [images, setImages] = useState<string[]>(initialData?.images ?? [])
-  const [colors, setColors] = useState<{ name: string; hex_code: string }[]>(
+  const [colors, setColors] = useState<{ name: string; hex_code: string; images?: string[] }[]>(
     initialData?.variants?.colors ?? []
   )
   const [sizes, setSizes] = useState<string[]>(initialData?.variants?.sizes ?? [])
@@ -103,13 +103,29 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
 
   const addColor = () => {
     if (!newColorName.trim()) return
-    setColors((prev) => [...prev, { name: newColorName.trim(), hex_code: newColorHex }])
+    setColors((prev) => [...prev, { name: newColorName.trim(), hex_code: newColorHex, images: [] }])
     setNewColorName('')
     setNewColorHex('#8B1A1A')
   }
 
   const removeColor = (index: number) => {
     setColors((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  // Toggle sebuah foto galeri untuk warna tertentu
+  const toggleColorImage = (colorIndex: number, imageUrl: string) => {
+    setColors((prev) =>
+      prev.map((c, i) => {
+        if (i !== colorIndex) return c
+        const imgs = c.images ?? []
+        return {
+          ...c,
+          images: imgs.includes(imageUrl)
+            ? imgs.filter((u) => u !== imageUrl)
+            : [...imgs, imageUrl],
+        }
+      })
+    )
   }
 
   const addSize = () => {
@@ -128,6 +144,13 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
   const onSubmit = async (data: FormValues) => {
     if (images.length === 0) {
       toast.error('Upload minimal 1 foto produk')
+      return
+    }
+
+    // Wajib tiap warna punya minimal 1 foto
+    const colorTanpaFoto = colors.find((c) => !c.images || c.images.length === 0)
+    if (colorTanpaFoto) {
+      toast.error(`Warna "${colorTanpaFoto.name}" belum punya foto. Pilih foto untuk tiap warna.`)
       return
     }
 
@@ -292,25 +315,57 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
         {/* Colors */}
         <div className="space-y-3">
           <Label style={labelStyle}>Pilihan Warna</Label>
-          <div className="flex flex-wrap gap-2 mb-3">
+          {/* Daftar warna + pemilih foto per warna */}
+          <div className="space-y-3 mb-3">
             {colors.map((c, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm"
-                style={{ borderColor: c.hex_code, background: `${c.hex_code}15` }}
-              >
-                <span
-                  className="w-4 h-4 rounded-full border border-white shadow-sm flex-shrink-0"
-                  style={{ background: c.hex_code }}
-                />
-                <span>{c.name}</span>
-                <button
-                  type="button"
-                  onClick={() => removeColor(i)}
-                  className="text-stone-400 hover:text-red-500 transition-colors"
-                >
-                  <X size={14} />
-                </button>
+              <div key={i} className="border border-stone-200 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <span
+                    className="w-5 h-5 rounded-full border border-white shadow-sm flex-shrink-0"
+                    style={{ background: c.hex_code }}
+                  />
+                  <span className="text-sm font-medium">{c.name}</span>
+                  <span className="text-xs text-stone-400">
+                    ({c.images?.length ?? 0} foto dipilih)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeColor(i)}
+                    className="ml-auto text-stone-400 hover:text-red-500 transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                {/* Pilih foto dari galeri untuk warna ini */}
+                {images.length === 0 ? (
+                  <p className="text-xs text-stone-400 italic">
+                    Upload foto produk dulu di atas, lalu pilih foto untuk warna ini.
+                  </p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {images.map((url) => {
+                      const selected = c.images?.includes(url)
+                      return (
+                        <button
+                          type="button"
+                          key={url}
+                          onClick={() => toggleColorImage(i, url)}
+                          className="relative w-14 h-14 rounded-md overflow-hidden border-2 transition-all"
+                          style={{ borderColor: selected ? '#8B1A1A' : 'transparent', opacity: selected ? 1 : 0.55 }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={url} alt="" className="w-full h-full object-cover" />
+                          {selected && (
+                            <span className="absolute top-0.5 right-0.5 bg-[#8B1A1A] text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                              ✓
+                            </span>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             ))}
           </div>
