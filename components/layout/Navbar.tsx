@@ -22,8 +22,12 @@ export default function Navbar() {
   const pathname = usePathname()
   const { getTotalItems } = useCart()
   const { wishlist } = useWishlist()
-  const cartCount = getTotalItems()
-  const wishlistCount = wishlist.length
+  const [mounted, setMounted] = useState(false)
+  // Badge hanya dirender setelah mount agar tidak hydration mismatch (data dari localStorage)
+  const cartCount = mounted ? getTotalItems() : 0
+  const wishlistCount = mounted ? wishlist.length : 0
+
+  useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 4)

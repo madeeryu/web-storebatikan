@@ -2,6 +2,7 @@ import { Playfair_Display, Inter, Cormorant_Garamond } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import PageTransition from '@/components/layout/PageTransition'
+import FloatingWhatsApp from '@/components/layout/FloatingWhatsApp'
 import { baseMetadata } from '@/lib/metadata'
 import './globals.css'
 

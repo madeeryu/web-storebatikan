@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Minus, Plus, ShoppingCart, Heart, ChevronDown } from 'lucide-react'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { VariantSelector } from '@/components/product/VariantSelector'
@@ -25,6 +26,7 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
   const [selectedSize, setSelectedSize] = useState(product.variants?.sizes?.[0] || '')
   const [descExpanded, setDescExpanded] = useState(false)
 
+  const router = useRouter()
   const { addItem } = useCart()
   const { toggle, isWishlisted } = useWishlist()
 
@@ -49,6 +51,22 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
       slug: product.slug,
     })
     toast.success('Produk ditambahkan ke keranjang!')
+  }
+
+  function handleBuyNow() {
+    addItem({
+      product_id: product.id,
+      product_name: product.name,
+      image: product.images?.[0] || '',
+      price: product.price,
+      original_price: product.price,
+      discount_percent: discountPercent,
+      selected_color: selectedColor || undefined,
+      selected_size: selectedSize || undefined,
+      quantity: qty,
+      slug: product.slug,
+    })
+    router.push('/cart')
   }
 
   const descLong = (product.description?.length ?? 0) > 300
@@ -137,6 +155,15 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
                 </button>
               </div>
             </div>
+
+            {/* Buy Now — langsung ke checkout */}
+            <button
+              onClick={handleBuyNow}
+              className="w-full flex items-center justify-center gap-2 text-white py-3 rounded font-semibold transition-opacity hover:opacity-90 text-sm"
+              style={{ backgroundColor: '#C5973A' }}
+            >
+              Beli Sekarang
+            </button>
 
             {/* Actions */}
             <div className="flex gap-3">
