@@ -103,12 +103,11 @@ export function ProdukPageClient() {
     promos.length ? getFinalPrice(product, promos).discountPercent : product.discount_percent
 
   return (
-    <div className="flex gap-6 items-start">
-      {/* Filter sidebar — kiri di desktop, drawer di mobile */}
+    <div>
+      {/* Filter bar — full width */}
       <ProductFilter />
 
-      {/* Area produk — mengisi sisa lebar */}
-      <div className="flex-1 min-w-0">
+      <div className="mt-4">
         {/* Count */}
         {!loading && totalCount > 0 && (
           <p className="text-sm text-gray-500 mb-4">

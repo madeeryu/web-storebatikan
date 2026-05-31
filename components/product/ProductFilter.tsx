@@ -155,18 +155,92 @@ export function ProductFilter() {
 
   return (
     <>
-      {/* Desktop sidebar */}
-      <aside className="hidden md:block w-56 shrink-0">
-        <div className="sticky top-24 bg-white rounded-lg border border-gray-100 p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="font-display font-semibold text-[var(--color-maroon)]">Filter</h2>
+      {/* Desktop filter bar — horizontal memanjang */}
+      <aside className="hidden md:block w-full mb-6">
+        <div className="bg-white rounded-lg border border-gray-100 p-5 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display font-semibold text-[var(--color-maroon)] flex items-center gap-2">
+              <SlidersHorizontal size={18} /> Filter
+            </h2>
             {hasActiveFilter && (
               <button onClick={resetFilter} className="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1">
-                <X size={12} /> Reset
+                <X size={12} /> Reset Filter
               </button>
             )}
           </div>
-          <FilterContent />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Urutkan */}
+            <div>
+              <h3 className="font-semibold text-[var(--color-charcoal)] mb-3 text-sm uppercase tracking-wide">Urutkan</h3>
+              <div className="flex flex-wrap gap-2">
+                {SORT_OPTIONS.map(opt => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      const next = { ...filter, sort: opt.value }
+                      setFilter(next)
+                      applyFilter(next)
+                    }}
+                    className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                      filter.sort === opt.value
+                        ? 'bg-[var(--color-maroon)] text-white'
+                        : 'bg-gray-50 hover:bg-gray-100 text-gray-600'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Kategori */}
+            {categories.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-[var(--color-charcoal)] mb-3 text-sm uppercase tracking-wide">Kategori</h3>
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  {categories.map(cat => (
+                    <label key={cat.id} className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={filter.categories.includes(cat.slug)}
+                        onChange={() => toggleCategory(cat.slug)}
+                        className="accent-[var(--color-maroon)] w-4 h-4"
+                      />
+                      <span className="text-sm text-gray-600 group-hover:text-[var(--color-maroon)] transition-colors">
+                        {cat.name}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Harga */}
+            <div>
+              <h3 className="font-semibold text-[var(--color-charcoal)] mb-3 text-sm uppercase tracking-wide">Harga</h3>
+              <div className="space-y-2">
+                <div className="flex gap-2 text-xs text-gray-500">
+                  <span>{formatRupiah(filter.minPrice)}</span>
+                  <span className="ml-auto">{formatRupiah(filter.maxPrice)}</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={MAX_PRICE}
+                  step={50000}
+                  value={filter.maxPrice}
+                  onChange={e => {
+                    const next = { ...filter, maxPrice: Number(e.target.value) }
+                    setFilter(next)
+                  }}
+                  onMouseUp={() => applyFilter(filter)}
+                  onTouchEnd={() => applyFilter(filter)}
+                  className="w-full accent-[var(--color-maroon)]"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
 

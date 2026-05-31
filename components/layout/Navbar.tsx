@@ -155,8 +155,8 @@ export default function Navbar() {
                   <span className="navbar-icon-tooltip">Wishlist</span>
                   {wishlistCount > 0 && (
                     <span
-                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold text-white z-20"
-                      style={{ backgroundColor: '#C5973A', fontSize: '10px' }}
+                      className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-bold z-20 shadow-md"
+                      style={{ backgroundColor: '#C5973A', fontSize: '10px', border: '2px solid #FFFFFF' }}
                     >
                       {wishlistCount > 9 ? '9+' : wishlistCount}
                     </span>
@@ -175,8 +175,8 @@ export default function Navbar() {
                   <span className="navbar-icon-tooltip">Keranjang</span>
                   {cartCount > 0 && (
                     <span
-                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold text-white z-20"
-                      style={{ backgroundColor: '#C5973A', fontSize: '10px' }}
+                      className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-bold z-20 shadow-md"
+                      style={{ backgroundColor: '#8B1A1A', fontSize: '10px', border: '2px solid #FFFFFF' }}
                     >
                       {cartCount > 9 ? '9+' : cartCount}
                     </span>
@@ -242,20 +242,26 @@ export default function Navbar() {
             </Link>
 
             {/* Icons mobile */}
-            <div className="flex items-center gap-2">
-              <Link href="/wishlist" className="relative p-1.5" style={{ color: '#1A1A1A' }}>
-                <Heart size={20} />
+            <div className="flex items-center gap-1">
+              <Link href="/wishlist" className="relative p-2" style={{ color: '#1A1A1A' }} aria-label="Wishlist">
+                <Heart size={24} />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-xs flex items-center justify-center font-bold" style={{ backgroundColor: '#C5973A', fontSize: '10px' }}>
-                    {wishlistCount}
+                  <span
+                    className="absolute top-0 right-0 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-bold leading-none shadow-md"
+                    style={{ backgroundColor: '#C5973A', fontSize: '10px', border: '2px solid #FFFFFF' }}
+                  >
+                    {wishlistCount > 9 ? '9+' : wishlistCount}
                   </span>
                 )}
               </Link>
-              <Link href="/cart" className="relative p-1.5" style={{ color: '#1A1A1A' }}>
-                <ShoppingCart size={20} />
+              <Link href="/cart" className="relative p-2" style={{ color: '#1A1A1A' }} aria-label="Keranjang">
+                <ShoppingCart size={24} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-xs flex items-center justify-center font-bold" style={{ backgroundColor: '#C5973A', fontSize: '10px' }}>
-                    {cartCount}
+                  <span
+                    className="absolute top-0 right-0 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-bold leading-none shadow-md"
+                    style={{ backgroundColor: '#8B1A1A', fontSize: '10px', border: '2px solid #FFFFFF' }}
+                  >
+                    {cartCount > 9 ? '9+' : cartCount}
                   </span>
                 )}
               </Link>
