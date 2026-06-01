@@ -45,7 +45,7 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
     addItem({
       product_id: product.id,
       product_name: product.name,
-      image: product.images?.[0] || '',
+      image: colorObj?.images?.[0] || product.images?.[0] || '',
       price: product.price,
       original_price: product.price,
       discount_percent: discountPercent,
@@ -61,7 +61,7 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
     addItem({
       product_id: product.id,
       product_name: product.name,
-      image: product.images?.[0] || '',
+      image: colorObj?.images?.[0] || product.images?.[0] || '',
       price: product.price,
       original_price: product.price,
       discount_percent: discountPercent,
