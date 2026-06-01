@@ -201,7 +201,7 @@ export async function addPromo(data: Omit<Promo, 'id'>) {
 }
 
 export async function updatePromo(id: string, data: Partial<Promo>) {
-  return updateDoc(doc(db, 'promos', id), data)
+  return updateDoc(doc(db, 'promos', id), toPromoPayload(data))
 }
 
 export async function deletePromo(id: string) {
@@ -322,8 +322,22 @@ export const createBanner = async (data: Omit<Banner, 'id'>) => addBanner(data)
 /** Alias addCategory → createCategory */
 export const createCategory = async (data: Omit<Category, 'id'>) => addCategory(data)
 
-/** Alias addPromo → createPromo */
-export const createPromo = async (data: Omit<Promo, 'id'>) => addPromo(data)
+/** Alias addPromo → createPromo (konversi tanggal string → Timestamp) */
+export const createPromo = async (data: Omit<Promo, 'id'>) =>
+  addPromo(toPromoPayload(data) as Omit<Promo, 'id'>)
+
+/** Konversi field tanggal string (dari input date) menjadi Firestore Timestamp */
+function toPromoPayload(data: any) {
+  const out = { ...data }
+  if (typeof out.start_date === 'string' && out.start_date) {
+    out.start_date = Timestamp.fromDate(new Date(out.start_date))
+  }
+  if (typeof out.end_date === 'string' && out.end_date) {
+    // set ke akhir hari agar promo aktif sepanjang tanggal selesai
+    out.end_date = Timestamp.fromDate(new Date(out.end_date + 'T23:59:59'))
+  }
+  return out
+}
 
 /** Alias getStoreSettings → getSettings */
 export const getSettings = () => getStoreSettings()
