@@ -25,11 +25,11 @@ export default function HomePage() {
         {/* Flash Sale — tampil jika ada promo flash sale aktif */}
         <FlashSale />
 
-        {/* New Arrival */}
-        <NewArrival />
-
         {/* Kategori Grid */}
         <CategoryGrid />
+
+        {/* New Arrival */}
+        <NewArrival />
 
         {/* Produk Unggulan */}
         <FeaturedProducts />
