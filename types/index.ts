@@ -19,6 +19,8 @@ export interface Product {
   is_featured: boolean              // tampil di section unggulan homepage
   is_active: boolean
   created_at: any                   // Firestore Timestamp
+  rating?: number                   // 0-5, diisi admin (opsional)
+  sold?: number                     // jumlah terjual, diisi admin (opsional)
 }
 
 export interface ProductColor {
@@ -56,6 +58,7 @@ export interface Promo {
   start_date: any                   // Firestore Timestamp
   end_date: any                     // Firestore Timestamp
   is_active: boolean
+  is_flash_sale?: boolean           // true = tampil di section Flash Sale homepage
 }
 
 export interface Review {

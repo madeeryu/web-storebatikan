@@ -177,6 +177,25 @@ export async function getAllPromos(): Promise<Promo[]> {
   return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Promo))
 }
 
+/** Ambil promo flash sale aktif yang pertama (untuk section homepage) */
+export async function getActiveFlashSale(): Promise<{ promo: Promo; products: Product[] } | null> {
+  const promos = await getActivePromos()
+  const flash = promos.find(p => p.is_flash_sale)
+  if (!flash) return null
+
+  // Kumpulkan produk yang kena promo flash sale ini
+  const allActive = await getProducts([where('is_active', '==', true)])
+  let products: Product[]
+  if (flash.applies_to === 'all') {
+    products = allActive
+  } else if (flash.applies_to === 'category') {
+    products = allActive.filter(p => flash.target_ids.includes(p.category_id))
+  } else {
+    products = allActive.filter(p => flash.target_ids.includes(p.id))
+  }
+  return { promo: flash, products: products.slice(0, 12) }
+}
+
 export async function addPromo(data: Omit<Promo, 'id'>) {
   return addDoc(collection(db, 'promos'), data)
 }

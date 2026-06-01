@@ -38,6 +38,7 @@ const promoSchema = z.object({
   start_date: z.string().min(1, 'Tanggal mulai wajib diisi'),
   end_date: z.string().min(1, 'Tanggal selesai wajib diisi'),
   is_active: z.boolean(),
+  is_flash_sale: z.boolean(),
 })
 type PromoForm = z.infer<typeof promoSchema>
 
@@ -82,7 +83,7 @@ export default function AdminPromoPage() {
     resolver: zodResolver(promoSchema) as any,
     defaultValues: {
       name: '', discount_percent: 10, applies_to: 'all',
-      target_ids: [], start_date: '', end_date: '', is_active: true,
+      target_ids: [], start_date: '', end_date: '', is_active: true, is_flash_sale: false,
     },
   })
 
@@ -103,7 +104,7 @@ export default function AdminPromoPage() {
 
   const openAdd = () => {
     setEditTarget(null)
-    reset({ name: '', discount_percent: 10, applies_to: 'all', target_ids: [], start_date: '', end_date: '', is_active: true })
+    reset({ name: '', discount_percent: 10, applies_to: 'all', target_ids: [], start_date: '', end_date: '', is_active: true, is_flash_sale: false })
     setDialogOpen(true)
   }
 
@@ -117,6 +118,7 @@ export default function AdminPromoPage() {
       start_date: toInputDate(p.start_date),
       end_date: toInputDate(p.end_date),
       is_active: p.is_active,
+      is_flash_sale: p.is_flash_sale ?? false,
     })
     setDialogOpen(true)
   }
@@ -326,6 +328,16 @@ export default function AdminPromoPage() {
                 className="data-[state=checked]:bg-[#8B1A1A]"
               />
               <Label>Aktifkan promo</Label>
+            </div>
+
+            {/* Flash Sale */}
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={watch('is_flash_sale')}
+                onCheckedChange={(v) => setValue('is_flash_sale', v)}
+                className="data-[state=checked]:bg-[#C5973A]"
+              />
+              <Label>Tampilkan di Flash Sale homepage</Label>
             </div>
 
             <DialogFooter>

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Heart } from 'lucide-react'
+import { Heart, Star } from 'lucide-react'
 import { useState } from 'react'
 import { useWishlist } from '@/hooks/useWishlist'
 import { formatRupiah, calculateDiscountedPrice, isNewProduct } from '@/lib/utils'
@@ -111,6 +111,20 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
               </span>
             )}
           </div>
+
+          {/* Rating & Terjual */}
+          {(product.rating || product.sold) && (
+            <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
+              {product.rating ? (
+                <span className="flex items-center gap-0.5">
+                  <Star size={12} className="fill-[var(--color-gold)] text-[var(--color-gold)]" />
+                  <span className="text-gray-500">{product.rating.toFixed(1)}</span>
+                </span>
+              ) : null}
+              {product.rating && product.sold ? <span className="text-gray-300">|</span> : null}
+              {product.sold ? <span>{product.sold} terjual</span> : null}
+            </div>
+          )}
         </div>
       </Link>
     </div>

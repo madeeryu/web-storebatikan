@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Footer from '@/components/layout/Footer'
 import { HeroBanner } from '@/components/home/HeroBanner'
+import { FlashSale } from '@/components/home/FlashSale'
 import { PromoSection } from '@/components/home/PromoSection'
 import { NewArrival } from '@/components/home/NewArrival'
 import { CategoryGrid } from '@/components/home/CategoryGrid'
@@ -21,6 +22,9 @@ export default function HomePage() {
       <main className="min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
         {/* Hero Banner Slider */}
         <HeroBanner />
+
+        {/* Flash Sale — tampil jika ada promo flash sale aktif */}
+        <FlashSale />
 
         {/* Promo Section — tampil otomatis jika ada promo aktif */}
         <PromoSection />
