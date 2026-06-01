@@ -293,14 +293,25 @@ export default function Navbar() {
         {/* MOBILE NAVBAR */}
         <div className="md:hidden">
           <div className="flex items-center justify-between h-14 px-4">
-            {/* Hamburger */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-1.5"
-              style={{ color: '#1A1A1A' }}
-            >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+            {/* Hamburger + Search */}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="p-1.5"
+                style={{ color: '#1A1A1A' }}
+                aria-label="Menu"
+              >
+                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+              <button
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-1.5"
+                style={{ color: '#1A1A1A' }}
+                aria-label="Cari"
+              >
+                <Search size={22} />
+              </button>
+            </div>
 
             {/* Logo tengah mobile */}
             <Link href="/" className="flex flex-col items-center absolute left-1/2 -translate-x-1/2">
@@ -352,6 +363,59 @@ export default function Navbar() {
               </Link>
             </div>
           </div>
+
+          {/* Mobile Search bar */}
+          {searchOpen && (
+            <div className="border-t px-4 py-3" style={{ borderColor: '#E5E5E5', backgroundColor: '#FAFAFA' }}>
+              <form onSubmit={submitSearch} className="relative">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  autoFocus
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cari produk batik..."
+                  className="w-full pl-9 pr-4 py-2 text-sm border rounded outline-none"
+                  style={{ borderColor: '#C5973A', borderRadius: '3px' }}
+                />
+                {searchQuery.trim().length > 0 && (
+                  <div className="absolute left-0 right-0 top-full mt-1 bg-white border rounded-lg shadow-lg overflow-hidden z-50" style={{ borderColor: '#E5E5E5' }}>
+                    {searchResults.length > 0 ? (
+                      <>
+                        {searchResults.map((p) => (
+                          <button
+                            type="button"
+                            key={p.id}
+                            onClick={() => goToProduct(p.slug)}
+                            className="flex items-center gap-3 w-full px-3 py-2 hover:bg-gray-50 text-left transition-colors"
+                          >
+                            <div className="relative w-10 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                              {p.images?.[0] && (
+                                <Image src={p.images[0]} alt={p.name} fill className="object-cover" sizes="40px" />
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm text-gray-800 truncate">{p.name}</p>
+                              <p className="text-xs font-semibold" style={{ color: '#8B1A1A' }}>{formatRupiah(p.price)}</p>
+                            </div>
+                          </button>
+                        ))}
+                        <button
+                          type="submit"
+                          className="w-full px-3 py-2.5 text-xs font-semibold text-center border-t hover:bg-gray-50 transition-colors"
+                          style={{ color: '#C5973A', borderColor: '#F0F0F0' }}
+                        >
+                          Lihat semua hasil untuk &quot;{searchQuery.trim()}&quot;
+                        </button>
+                      </>
+                    ) : (
+                      <p className="px-3 py-4 text-sm text-gray-400 text-center">Produk tidak ditemukan</p>
+                    )}
+                  </div>
+                )}
+              </form>
+            </div>
+          )}
 
           {/* Mobile Menu */}
           {mobileOpen && (
