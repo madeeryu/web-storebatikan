@@ -53,12 +53,9 @@ export function CategoryGrid() {
               <Link
                 key={cat.id}
                 href={`/kategori/${cat.slug}`}
-                className="group flex flex-col items-center gap-2"
+                className="category-circle group flex flex-col items-center gap-2"
               >
-                <div
-                  className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100 border-2 transition-all duration-300 group-hover:scale-105"
-                  style={{ borderColor: 'transparent' }}
-                >
+                <div className="category-circle-img relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100">
                   {cat.image ? (
                     <Image
                       src={cat.image}

@@ -549,3 +549,35 @@
 }
 
 /* Navbar scroll effect handled inline in Navbar.tsx via React scrolled state */
+
+/* ═══════════════════════════════════════════
+   CATEGORY CIRCLE HOVER (Jelajahi Koleksi)
+   ═══════════════════════════════════════════ */
+.category-circle-img {
+  border: 2px solid transparent;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+}
+.category-circle:hover .category-circle-img,
+.category-circle:active .category-circle-img {
+  transform: scale(1.12);
+  border-color: #C5973A;
+  box-shadow: 0 8px 22px rgba(197, 151, 58, 0.35);
+}
+
+/* ═══════════════════════════════════════════
+   AKTIFKAN HOVER EFFECT DI LAYAR SENTUH (HP)
+   Pada device touch, :active mensimulasikan hover saat ditekan
+   ═══════════════════════════════════════════ */
+@media (hover: none) {
+  .product-card:active {
+    box-shadow: 0 8px 32px rgba(197, 151, 58, 0.15), 0 2px 8px rgba(0,0,0,0.08);
+    transform: translateY(-4px);
+    border-color: rgba(197, 151, 58, 0.5);
+  }
+  .product-card:active::after { transform: scaleX(1); }
+  .wishlist-btn { opacity: 1; transform: scale(1) translateY(0); }
+  .category-card:active::before { opacity: 1; }
+  .category-card:active::after { border-color: rgba(197, 151, 58, 0.5); }
+}
