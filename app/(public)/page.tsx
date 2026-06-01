@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Footer from '@/components/layout/Footer'
 import { HeroBanner } from '@/components/home/HeroBanner'
 import { FlashSale } from '@/components/home/FlashSale'
-import { PromoSection } from '@/components/home/PromoSection'
 import { NewArrival } from '@/components/home/NewArrival'
 import { CategoryGrid } from '@/components/home/CategoryGrid'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
@@ -25,9 +24,6 @@ export default function HomePage() {
 
         {/* Flash Sale — tampil jika ada promo flash sale aktif */}
         <FlashSale />
-
-        {/* Promo Section — tampil otomatis jika ada promo aktif */}
-        <PromoSection />
 
         {/* New Arrival */}
         <NewArrival />
