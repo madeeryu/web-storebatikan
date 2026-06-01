@@ -6,6 +6,7 @@ import { NewArrival } from '@/components/home/NewArrival'
 import { CategoryGrid } from '@/components/home/CategoryGrid'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { TestimoniSection } from '@/components/home/TestimoniSection'
+import { Reveal } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = {
   title: 'Batik AN — Warisan Budaya Modern',
@@ -23,19 +24,19 @@ export default function HomePage() {
         <HeroBanner />
 
         {/* Flash Sale — tampil jika ada promo flash sale aktif */}
-        <FlashSale />
+        <Reveal><FlashSale /></Reveal>
 
         {/* Kategori Grid */}
-        <CategoryGrid />
+        <Reveal><CategoryGrid /></Reveal>
 
         {/* New Arrival */}
-        <NewArrival />
+        <Reveal><NewArrival /></Reveal>
 
         {/* Produk Unggulan */}
-        <FeaturedProducts />
+        <Reveal><FeaturedProducts /></Reveal>
 
         {/* Testimoni / Review */}
-        <TestimoniSection />
+        <Reveal><TestimoniSection /></Reveal>
       </main>
       <Footer />
     </>
