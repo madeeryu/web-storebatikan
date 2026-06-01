@@ -7,7 +7,7 @@ import { getProducts, getActivePromos, getFinalPrice, getCategories } from '@/li
 import { ProductCard } from '@/components/product/ProductCard'
 import { ProductFilter } from '@/components/product/ProductFilter'
 import type { Product, Promo } from '@/types'
-import { where, orderBy, limit } from 'firebase/firestore'
+import { where, limit } from 'firebase/firestore'
 import { ShoppingBag } from 'lucide-react'
 
 const PER_PAGE = 12
@@ -35,35 +35,16 @@ export function ProdukPageClient() {
       ])
       setPromos(activePromos)
 
-      // Build constraints
-      const constraints = [where('is_active', '==', true)]
+      // Ambil SEMUA produk aktif, lalu filter & sort di client.
+      // (hindari composite index Firestore yang bikin filter tidak konsisten)
+      let all = await getProducts([where('is_active', '==', true), limit(300)] as any)
 
-      // Filter by category slug → convert to id
+      // Filter kategori (1 atau lebih slug)
       if (kategoriSlugs.length > 0) {
-        const catIds = allCats
-          .filter(c => kategoriSlugs.includes(c.slug))
-          .map(c => c.id)
-        if (catIds.length > 0) {
-          // Firestore 'in' only works for 1 field at a time
-          // If single: use where, else fetch all and filter client-side
-          if (catIds.length === 1) {
-            constraints.push(where('category_id', '==', catIds[0]) as any)
-          }
-        }
+        const catMap = Object.fromEntries(allCats.map(c => [c.slug, c.id]))
+        const catIds = kategoriSlugs.map(s => catMap[s]).filter(Boolean)
+        all = all.filter(p => catIds.includes(p.category_id))
       }
-
-      // Sort
-      if (sort === 'harga-asc') {
-        constraints.push(orderBy('price', 'asc') as any)
-      } else if (sort === 'harga-desc') {
-        constraints.push(orderBy('price', 'desc') as any)
-      } else {
-        constraints.push(orderBy('created_at', 'desc') as any)
-      }
-
-      constraints.push(limit(200) as any)
-
-      let all = await getProducts(constraints as any)
 
       // Filter pencarian (cocokkan nama / kategori)
       if (q) {
@@ -74,25 +55,25 @@ export function ProdukPageClient() {
         )
       }
 
-      // Client-side filter harga
+      // Filter harga (pakai harga final setelah diskon/promo)
       all = all.filter(p => {
         const { finalPrice } = getFinalPrice(p, activePromos)
         return finalPrice >= minPrice && finalPrice <= maxPrice
       })
 
-      // Multi-category filter (if multiple slugs)
-      if (kategoriSlugs.length > 1) {
-        const allCatMap = Object.fromEntries(allCats.map(c => [c.slug, c.id]))
-        const catIds = kategoriSlugs.map(s => allCatMap[s]).filter(Boolean)
-        all = all.filter(p => catIds.includes(p.category_id))
-      }
-
-      // Sort by discount if selected
-      if (sort === 'diskon') {
+      // Sort
+      if (sort === 'harga-asc') {
+        all = all.sort((a, b) => getFinalPrice(a, activePromos).finalPrice - getFinalPrice(b, activePromos).finalPrice)
+      } else if (sort === 'harga-desc') {
+        all = all.sort((a, b) => getFinalPrice(b, activePromos).finalPrice - getFinalPrice(a, activePromos).finalPrice)
+      } else if (sort === 'diskon') {
+        all = all.sort((a, b) => getFinalPrice(b, activePromos).discountPercent - getFinalPrice(a, activePromos).discountPercent)
+      } else {
+        // terbaru: berdasarkan created_at desc
         all = all.sort((a, b) => {
-          const da = getFinalPrice(a, activePromos).discountPercent
-          const db = getFinalPrice(b, activePromos).discountPercent
-          return db - da
+          const ta = a.created_at?.toMillis?.() ?? 0
+          const tb = b.created_at?.toMillis?.() ?? 0
+          return tb - ta
         })
       }
 

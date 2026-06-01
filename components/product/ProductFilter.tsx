@@ -219,17 +219,43 @@ export function ProductFilter() {
             {/* Harga */}
             <div>
               <h3 className="font-semibold text-[var(--color-charcoal)] mb-3 text-sm uppercase tracking-wide">Harga</h3>
-              <div className="space-y-2">
+              <div className="space-y-3">
+                {/* Input ketik min - max */}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={0}
+                    value={filter.minPrice || ''}
+                    onChange={e => setFilter({ ...filter, minPrice: Number(e.target.value) || 0 })}
+                    onBlur={() => applyFilter(filter)}
+                    onKeyDown={e => e.key === 'Enter' && applyFilter(filter)}
+                    placeholder="Rp Min"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded outline-none focus:border-[var(--color-maroon)]"
+                  />
+                  <span className="text-gray-400 text-xs">—</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={filter.maxPrice >= MAX_PRICE ? '' : filter.maxPrice}
+                    onChange={e => setFilter({ ...filter, maxPrice: Number(e.target.value) || MAX_PRICE })}
+                    onBlur={() => applyFilter(filter)}
+                    onKeyDown={e => e.key === 'Enter' && applyFilter(filter)}
+                    placeholder="Rp Max"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded outline-none focus:border-[var(--color-maroon)]"
+                  />
+                </div>
+
+                {/* Slider max */}
                 <div className="flex gap-2 text-xs text-gray-500">
                   <span>{formatRupiah(filter.minPrice)}</span>
-                  <span className="ml-auto">{formatRupiah(filter.maxPrice)}</span>
+                  <span className="ml-auto">{filter.maxPrice >= MAX_PRICE ? formatRupiah(MAX_PRICE) + '+' : formatRupiah(filter.maxPrice)}</span>
                 </div>
                 <input
                   type="range"
                   min={0}
                   max={MAX_PRICE}
                   step={50000}
-                  value={filter.maxPrice}
+                  value={Math.min(filter.maxPrice, MAX_PRICE)}
                   onChange={e => {
                     const next = { ...filter, maxPrice: Number(e.target.value) }
                     setFilter(next)
