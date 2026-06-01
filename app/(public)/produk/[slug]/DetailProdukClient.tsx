@@ -42,35 +42,35 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
   const colorFirstImage = colorObj?.images?.[0]
   const initialImageIndex = colorFirstImage ? Math.max(0, allImages.indexOf(colorFirstImage)) : 0
 
-  function handleAddToCart() {
-    addItem({
+  // Harga menyesuaikan ukuran terpilih (jika ukuran punya harga khusus)
+  const sizePrices = product.variants?.size_prices ?? {}
+  const basePrice = (selectedSize && sizePrices[selectedSize]) || product.price
+  const effectiveFinalPrice = discountPercent > 0
+    ? Math.round(basePrice * (1 - discountPercent / 100))
+    : basePrice
+
+  function cartPayload() {
+    return {
       product_id: product.id,
       product_name: product.name,
       image: colorObj?.images?.[0] || product.images?.[0] || '',
-      price: product.price,
-      original_price: product.price,
+      price: basePrice,                 // harga sesuai ukuran terpilih
+      original_price: basePrice,
       discount_percent: discountPercent,
       selected_color: selectedColor || undefined,
       selected_size: selectedSize || undefined,
       quantity: qty,
       slug: product.slug,
-    })
+    }
+  }
+
+  function handleAddToCart() {
+    addItem(cartPayload())
     toast.success('Produk ditambahkan ke keranjang!')
   }
 
   function handleBuyNow() {
-    addItem({
-      product_id: product.id,
-      product_name: product.name,
-      image: colorObj?.images?.[0] || product.images?.[0] || '',
-      price: product.price,
-      original_price: product.price,
-      discount_percent: discountPercent,
-      selected_color: selectedColor || undefined,
-      selected_size: selectedSize || undefined,
-      quantity: qty,
-      slug: product.slug,
-    })
+    addItem(cartPayload())
     router.push('/cart')
   }
 
@@ -110,16 +110,16 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
             </h1>
 
             {/* Flash Sale banner (jika produk sedang flash sale) */}
-            <FlashSaleBanner product={product} finalPrice={finalPrice} />
+            <FlashSaleBanner product={product} finalPrice={effectiveFinalPrice} />
 
             {/* Price */}
             <div className="flex items-center gap-3 flex-wrap">
               <span className="font-bold text-xl sm:text-2xl text-[var(--color-maroon)]">
-                {formatRupiah(finalPrice)}
+                {formatRupiah(effectiveFinalPrice)}
               </span>
               {discountPercent > 0 && (
                 <>
-                  <span className="text-gray-400 line-through text-sm sm:text-base">{formatRupiah(product.price)}</span>
+                  <span className="text-gray-400 line-through text-sm sm:text-base">{formatRupiah(basePrice)}</span>
                   <span className="bg-[var(--color-gold)] text-[var(--color-maroon)] text-xs font-bold px-2 py-0.5 rounded">
                     -{discountPercent}%
                   </span>
@@ -135,6 +135,7 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
               <VariantSelector
                 colors={product.variants?.colors || []}
                 sizes={product.variants?.sizes || []}
+                sizePrices={sizePrices}
                 selectedColor={selectedColor}
                 selectedSize={selectedSize}
                 onColorChange={setSelectedColor}

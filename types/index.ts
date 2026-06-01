@@ -15,6 +15,7 @@ export interface Product {
   variants: {
     colors: ProductColor[]
     sizes: string[]                 // ["S","M","L","XL"] atau ["38","39","40"] dll
+    size_prices?: Record<string, number>  // harga khusus per ukuran, mis. {"XXL":95000,"L4":120000}
   }
   is_featured: boolean              // tampil di section unggulan homepage
   is_active: boolean

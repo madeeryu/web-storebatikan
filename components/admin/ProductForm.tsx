@@ -53,6 +53,9 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
     initialData?.variants?.colors ?? []
   )
   const [sizes, setSizes] = useState<string[]>(initialData?.variants?.sizes ?? [])
+  const [sizePrices, setSizePrices] = useState<Record<string, number>>(
+    initialData?.variants?.size_prices ?? {}
+  )
   const [newColorName, setNewColorName] = useState('')
   const [newColorHex, setNewColorHex] = useState('#8B1A1A')
   const [newSize, setNewSize] = useState('')
@@ -137,6 +140,20 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
 
   const removeSize = (size: string) => {
     setSizes((prev) => prev.filter((s) => s !== size))
+    setSizePrices((prev) => {
+      const next = { ...prev }
+      delete next[size]
+      return next
+    })
+  }
+
+  const setSizePrice = (size: string, value: number) => {
+    setSizePrices((prev) => {
+      const next = { ...prev }
+      if (!value || value <= 0) delete next[size]
+      else next[size] = value
+      return next
+    })
   }
 
   const selectedCategory = categories.find((c) => c.id === watch('category_id'))
@@ -160,7 +177,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
         ...data,
         category_name: selectedCategory?.name ?? '',
         images,
-        variants: { colors, sizes },
+        variants: { colors, sizes, size_prices: sizePrices },
       }
 
       if (initialData && productId) {
@@ -401,26 +418,39 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
           </div>
         </div>
 
-        {/* Sizes */}
+        {/* Sizes + harga per ukuran */}
         <div className="space-y-3">
           <Label style={labelStyle}>Pilihan Ukuran</Label>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {sizes.map((s) => (
-              <div
-                key={s}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 text-sm font-medium text-stone-700"
-              >
-                {s}
-                <button
-                  type="button"
-                  onClick={() => removeSize(s)}
-                  className="text-stone-400 hover:text-red-500 transition-colors ml-1"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+
+          {/* Daftar ukuran dengan input harga khusus */}
+          {sizes.length > 0 && (
+            <div className="space-y-2 mb-3">
+              {sizes.map((s) => (
+                <div key={s} className="flex items-center gap-3 border border-stone-200 rounded-lg p-2">
+                  <span className="font-medium text-sm w-16 text-center bg-stone-100 rounded py-1">{s}</span>
+                  <div className="flex items-center gap-1.5 flex-1">
+                    <span className="text-xs text-stone-400">Rp</span>
+                    <Input
+                      type="number"
+                      min={0}
+                      value={sizePrices[s] ?? ''}
+                      onChange={(e) => setSizePrice(s, Number(e.target.value))}
+                      placeholder="Kosongkan = harga normal"
+                      className={`${fieldStyle} h-8 text-sm`}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeSize(s)}
+                    className="text-stone-400 hover:text-red-500 transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="flex gap-2 items-center">
             <Input
               value={newSize}
@@ -439,7 +469,9 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
               <Plus size={14} className="mr-1" /> Tambah
             </Button>
           </div>
-          <p className="text-xs text-stone-400">Tekan Enter atau klik Tambah untuk menambah ukuran</p>
+          <p className="text-xs text-stone-400">
+            Isi harga khusus jika ukuran tertentu berbeda harga (mis. XXL lebih mahal). Kosongkan untuk pakai harga normal.
+          </p>
         </div>
       </section>
 

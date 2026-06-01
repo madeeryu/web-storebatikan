@@ -1,8 +1,11 @@
 'use client'
 
+import { formatRupiah } from '@/lib/utils'
+
 interface VariantSelectorProps {
   colors: { name: string; hex_code: string; images?: string[] }[]
   sizes: string[]
+  sizePrices?: Record<string, number>
   selectedColor: string
   selectedSize: string
   onColorChange: (color: string) => void
@@ -12,6 +15,7 @@ interface VariantSelectorProps {
 export function VariantSelector({
   colors,
   sizes,
+  sizePrices = {},
   selectedColor,
   selectedSize,
   onColorChange,
@@ -76,19 +80,27 @@ export function VariantSelector({
             )}
           </p>
           <div className="flex gap-2 flex-wrap">
-            {sizes.map(size => (
-              <button
-                key={size}
-                onClick={() => onSizeChange(size)}
-                className={`px-4 py-1.5 border rounded text-sm font-medium transition-all duration-200 ${
-                  selectedSize === size
-                    ? 'bg-[var(--color-maroon)] text-white border-[var(--color-maroon)]'
-                    : 'border-gray-300 text-gray-600 hover:border-[var(--color-maroon)] hover:text-[var(--color-maroon)]'
-                }`}
-              >
-                {size}
-              </button>
-            ))}
+            {sizes.map(size => {
+              const sp = sizePrices[size]
+              return (
+                <button
+                  key={size}
+                  onClick={() => onSizeChange(size)}
+                  className={`px-4 py-1.5 border rounded text-sm font-medium transition-all duration-200 flex flex-col items-center leading-tight ${
+                    selectedSize === size
+                      ? 'bg-[var(--color-maroon)] text-white border-[var(--color-maroon)]'
+                      : 'border-gray-300 text-gray-600 hover:border-[var(--color-maroon)] hover:text-[var(--color-maroon)]'
+                  }`}
+                >
+                  <span>{size}</span>
+                  {sp ? (
+                    <span className={`text-[10px] ${selectedSize === size ? 'text-white/80' : 'text-[var(--color-gold)]'}`}>
+                      {formatRupiah(sp)}
+                    </span>
+                  ) : null}
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
