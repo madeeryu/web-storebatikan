@@ -3,8 +3,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Heart, Star } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWishlist } from '@/hooks/useWishlist'
+import { getApprovedReviews } from '@/lib/firestore'
 import { formatRupiah, calculateDiscountedPrice, isNewProduct } from '@/lib/utils'
 import type { Product } from '@/types'
 
@@ -16,6 +17,20 @@ interface ProductCardProps {
 export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
   const { toggle, isWishlisted } = useWishlist()
   const [hovered, setHovered] = useState(false)
+  const [reviewStats, setReviewStats] = useState<{ avg: number; count: number } | null>(null)
+
+  // Ambil rating rata-rata & jumlah ulasan dari review yang disetujui
+  useEffect(() => {
+    let active = true
+    getApprovedReviews(product.id)
+      .then((reviews) => {
+        if (!active || reviews.length === 0) return
+        const avg = reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviews.length
+        setReviewStats({ avg, count: reviews.length })
+      })
+      .catch(() => {})
+    return () => { active = false }
+  }, [product.id])
 
   const discountPercent = Math.max(product.discount_percent || 0, promoDiscount)
   const finalPrice = calculateDiscountedPrice(product.price, discountPercent)
@@ -112,17 +127,13 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
             )}
           </div>
 
-          {/* Rating & Terjual */}
-          {(product.rating || product.sold) && (
-            <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
-              {product.rating ? (
-                <span className="flex items-center gap-0.5">
-                  <Star size={12} className="fill-[var(--color-gold)] text-[var(--color-gold)]" />
-                  <span className="text-gray-500">{product.rating.toFixed(1)}</span>
-                </span>
-              ) : null}
-              {product.rating && product.sold ? <span className="text-gray-300">|</span> : null}
-              {product.sold ? <span>{product.sold} terjual</span> : null}
+          {/* Rating & jumlah ulasan (dari review yang disetujui) */}
+          {reviewStats && (
+            <div className="flex items-center gap-1 mt-1.5 text-xs text-gray-400">
+              <Star size={12} className="fill-[var(--color-gold)] text-[var(--color-gold)]" />
+              <span className="text-gray-500">{reviewStats.avg.toFixed(1)}</span>
+              <span className="text-gray-300">|</span>
+              <span>{reviewStats.count} ulasan</span>
             </div>
           )}
         </div>

@@ -34,8 +34,6 @@ const schema = z.object({
   category_id: z.string().min(1, 'Pilih kategori'),
   price: z.number().min(1000, 'Harga minimal Rp 1.000'),
   discount_percent: z.number().min(0).max(100),
-  rating: z.number().min(0).max(5),
-  sold: z.number().min(0),
   is_featured: z.boolean(),
   is_active: z.boolean(),
 })
@@ -78,8 +76,6 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
       category_id: initialData?.category_id ?? '',
       price: initialData?.price ?? 0,
       discount_percent: initialData?.discount_percent ?? 0,
-      rating: initialData?.rating ?? 0,
-      sold: initialData?.sold ?? 0,
       is_featured: initialData?.is_featured ?? false,
       is_active: initialData?.is_active ?? true,
     },
@@ -253,34 +249,6 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
               placeholder="0"
             />
             <p className="text-xs text-stone-400">Isi 0 jika tidak ada diskon</p>
-          </div>
-
-          {/* Rating */}
-          <div className="space-y-1.5">
-            <Label style={labelStyle}>Rating (0–5)</Label>
-            <Input
-              {...register('rating', { valueAsNumber: true })}
-              type="number"
-              min={0}
-              max={5}
-              step={0.1}
-              className={fieldStyle}
-              placeholder="4.8"
-            />
-            <p className="text-xs text-stone-400">Tampil sebagai bintang di kartu produk</p>
-          </div>
-
-          {/* Sold */}
-          <div className="space-y-1.5">
-            <Label style={labelStyle}>Jumlah Terjual</Label>
-            <Input
-              {...register('sold', { valueAsNumber: true })}
-              type="number"
-              min={0}
-              className={fieldStyle}
-              placeholder="100"
-            />
-            <p className="text-xs text-stone-400">cth: 100 → "100 terjual"</p>
           </div>
         </div>
 

@@ -115,7 +115,7 @@ export function FlashSale() {
                   <div className="mt-1.5 h-4 rounded-full bg-[#C5973A]/20 relative overflow-hidden">
                     <div
                       className="h-full rounded-full"
-                      style={{ width: `${40 + ((p.sold ?? 0) % 50)}%`, background: 'linear-gradient(90deg, #C5973A, #8B1A1A)' }}
+                      style={{ width: '65%', background: 'linear-gradient(90deg, #C5973A, #8B1A1A)' }}
                     />
                     <span className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold text-white">
                       Stok Terbatas
