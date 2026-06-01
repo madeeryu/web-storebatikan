@@ -2,10 +2,10 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Heart, Star } from 'lucide-react'
+import { Heart, Star, Zap } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useWishlist } from '@/hooks/useWishlist'
-import { getApprovedReviews } from '@/lib/firestore'
+import { getApprovedReviews, getActiveFlashSalePromo, isProductInFlashSale } from '@/lib/firestore'
 import { formatRupiah, calculateDiscountedPrice, isNewProduct } from '@/lib/utils'
 import type { Product } from '@/types'
 
@@ -18,6 +18,15 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
   const { toggle, isWishlisted } = useWishlist()
   const [hovered, setHovered] = useState(false)
   const [reviewStats, setReviewStats] = useState<{ avg: number; count: number } | null>(null)
+  const [isFlash, setIsFlash] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getActiveFlashSalePromo()
+      .then((flash) => { if (active) setIsFlash(isProductInFlashSale(product, flash)) })
+      .catch(() => {})
+    return () => { active = false }
+  }, [product])
 
   // Ambil rating rata-rata & jumlah ulasan dari review yang disetujui
   useEffect(() => {
@@ -64,13 +73,21 @@ export function ProductCard({ product, promoDiscount = 0 }: ProductCardProps) {
 
       {/* Badges */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
+        {isFlash && (
+          <span
+            className="flex items-center gap-0.5 text-white text-xs font-bold px-2 py-0.5 rounded"
+            style={{ background: 'linear-gradient(135deg, #8B1A1A, #C5973A)' }}
+          >
+            <Zap size={11} className="fill-white" /> FLASH SALE
+          </span>
+        )}
         {discountPercent > 0 && (
-          <span className="bg-[var(--color-gold)] text-[var(--color-maroon)] text-xs font-bold px-2 py-0.5 rounded">
+          <span className="bg-[var(--color-gold)] text-[var(--color-maroon)] text-xs font-bold px-2 py-0.5 rounded w-fit">
             -{discountPercent}%
           </span>
         )}
         {isNew && (
-          <span className="bg-[var(--color-maroon)] text-white text-xs font-semibold px-2 py-0.5 rounded">
+          <span className="bg-[var(--color-maroon)] text-white text-xs font-semibold px-2 py-0.5 rounded w-fit">
             BARU
           </span>
         )}

@@ -196,6 +196,26 @@ export async function getActiveFlashSale(): Promise<{ promo: Promo; products: Pr
   return { promo: flash, products: products.slice(0, 12) }
 }
 
+// Cache promo flash sale aktif (hindari fetch berulang per kartu produk)
+let _flashCache: { promo: Promo | null; at: number } | null = null
+
+/** Ambil promo flash sale aktif (cached 60 detik). Null jika tidak ada. */
+export async function getActiveFlashSalePromo(): Promise<Promo | null> {
+  if (_flashCache && Date.now() - _flashCache.at < 60_000) return _flashCache.promo
+  const promos = await getActivePromos()
+  const flash = promos.find(p => p.is_flash_sale) ?? null
+  _flashCache = { promo: flash, at: Date.now() }
+  return flash
+}
+
+/** Cek apakah sebuah produk termasuk dalam promo flash sale */
+export function isProductInFlashSale(product: Product, flash: Promo | null): boolean {
+  if (!flash) return false
+  if (flash.applies_to === 'all') return true
+  if (flash.applies_to === 'category') return flash.target_ids.includes(product.category_id)
+  return flash.target_ids.includes(product.id)
+}
+
 export async function addPromo(data: Omit<Promo, 'id'>) {
   return addDoc(collection(db, 'promos'), data)
 }

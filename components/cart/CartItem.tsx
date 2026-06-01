@@ -1,13 +1,29 @@
 'use client'
 
 import Image from 'next/image'
-import { Minus, Plus, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Minus, Plus, Trash2, Zap } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
+import { getActiveFlashSalePromo } from '@/lib/firestore'
 import { formatRupiah, calculateDiscountedPrice } from '@/lib/utils'
 import type { CartItem as CartItemType } from '@/types'
 
 export function CartItem({ item }: { item: CartItemType }) {
   const { updateQuantity, removeItem } = useCart()
+  const [isFlash, setIsFlash] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getActiveFlashSalePromo()
+      .then((flash) => {
+        if (!active || !flash) return
+        const match =
+          flash.applies_to === 'all' || flash.target_ids.includes(item.product_id)
+        setIsFlash(match)
+      })
+      .catch(() => {})
+    return () => { active = false }
+  }, [item.product_id])
 
   const unitPrice = calculateDiscountedPrice(item.price, item.discount_percent)
   const subtotal = unitPrice * item.quantity
@@ -25,9 +41,19 @@ export function CartItem({ item }: { item: CartItemType }) {
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-display font-semibold text-sm text-[var(--color-charcoal)] line-clamp-2 mb-1">
-          {item.product_name}
-        </h3>
+        <div className="flex items-start gap-2 mb-1">
+          {isFlash && (
+            <span
+              className="flex items-center gap-0.5 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5"
+              style={{ background: 'linear-gradient(135deg, #8B1A1A, #C5973A)' }}
+            >
+              <Zap size={9} className="fill-white" /> FLASH
+            </span>
+          )}
+          <h3 className="font-display font-semibold text-sm text-[var(--color-charcoal)] line-clamp-2">
+            {item.product_name}
+          </h3>
+        </div>
 
         {(item.selected_color || item.selected_size) && (
           <p className="text-xs text-gray-500 mb-2">

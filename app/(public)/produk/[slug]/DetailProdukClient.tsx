@@ -8,6 +8,7 @@ import { ProductGallery } from '@/components/product/ProductGallery'
 import { VariantSelector } from '@/components/product/VariantSelector'
 import { ReviewSection } from '@/components/product/ReviewSection'
 import { RelatedProducts } from '@/components/product/RelatedProducts'
+import { FlashSaleBanner } from '@/components/product/FlashSaleBanner'
 import { useCart } from '@/hooks/useCart'
 import { useWishlist } from '@/hooks/useWishlist'
 import { formatRupiah } from '@/lib/utils'
@@ -108,14 +109,17 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
               {product.name}
             </h1>
 
+            {/* Flash Sale banner (jika produk sedang flash sale) */}
+            <FlashSaleBanner product={product} finalPrice={finalPrice} />
+
             {/* Price */}
-            <div className="flex items-center gap-3">
-              <span className="font-bold text-2xl text-[var(--color-maroon)]">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="font-bold text-xl sm:text-2xl text-[var(--color-maroon)]">
                 {formatRupiah(finalPrice)}
               </span>
               {discountPercent > 0 && (
                 <>
-                  <span className="text-gray-400 line-through text-base">{formatRupiah(product.price)}</span>
+                  <span className="text-gray-400 line-through text-sm sm:text-base">{formatRupiah(product.price)}</span>
                   <span className="bg-[var(--color-gold)] text-[var(--color-maroon)] text-xs font-bold px-2 py-0.5 rounded">
                     -{discountPercent}%
                   </span>
