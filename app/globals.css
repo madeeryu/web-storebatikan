@@ -581,3 +581,32 @@
   .category-card:active::before { opacity: 1; }
   .category-card:active::after { border-color: rgba(197, 151, 58, 0.5); }
 }
+
+/* ═══════════════════════════════════════════
+   TOMBOL TANYA ADMIN (WhatsApp)
+   ═══════════════════════════════════════════ */
+.ask-admin-btn {
+  position: relative;
+  overflow: hidden;
+  border-color: #25D366;
+  color: #1DA851;
+  background: transparent;
+  transition: color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+.ask-admin-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #25D366;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+  z-index: 0;
+}
+.ask-admin-btn > * { position: relative; z-index: 1; }
+.ask-admin-btn:hover {
+  color: #FFFFFF;
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+}
+.ask-admin-btn:hover::before { transform: scaleX(1); }
+.ask-admin-btn:active { transform: translateY(1px); }

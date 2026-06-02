@@ -230,10 +230,9 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
             {/* Tanya Admin via WhatsApp */}
             <button
               onClick={handleAskAdmin}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded font-semibold text-sm border transition-colors"
-              style={{ borderColor: '#25D366', color: '#1DA851' }}
+              className="ask-admin-btn group w-full flex items-center justify-center gap-2 py-2.5 rounded font-semibold text-sm border"
             >
-              <MessageCircle size={18} />
+              <MessageCircle size={18} className="transition-transform duration-300 group-hover:rotate-12" />
               Tanya tentang produk ini
             </button>
 
