@@ -11,9 +11,15 @@ import { formatRupiah, generateWALink } from '@/lib/utils'
 import type { StoreSettings } from '@/types'
 import toast from 'react-hot-toast'
 
+const ADDRESS_KEY = 'batikan-shipping-info'
+
 export default function CartPage() {
   const { items, getTotal, clearCart } = useCart()
   const [buyerName, setBuyerName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [address, setAddress] = useState('')
+  const [city, setCity] = useState('')
+  const [postalCode, setPostalCode] = useState('')
   const [notes, setNotes] = useState('')
   const [settings, setSettings] = useState<StoreSettings | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -21,7 +27,25 @@ export default function CartPage() {
   useEffect(() => {
     setMounted(true)
     getStoreSettings().then(setSettings).catch(console.error)
+    // Auto-isi dari data tersimpan di browser
+    try {
+      const saved = JSON.parse(localStorage.getItem(ADDRESS_KEY) || '{}')
+      if (saved.buyerName) setBuyerName(saved.buyerName)
+      if (saved.phone) setPhone(saved.phone)
+      if (saved.address) setAddress(saved.address)
+      if (saved.city) setCity(saved.city)
+      if (saved.postalCode) setPostalCode(saved.postalCode)
+    } catch {}
   }, [])
+
+  // Simpan info pengiriman ke browser setiap berubah
+  useEffect(() => {
+    if (!mounted) return
+    localStorage.setItem(
+      ADDRESS_KEY,
+      JSON.stringify({ buyerName, phone, address, city, postalCode })
+    )
+  }, [mounted, buyerName, phone, address, city, postalCode])
 
   if (!mounted) return null
 
@@ -30,6 +54,14 @@ export default function CartPage() {
   function handleCheckout() {
     if (!buyerName.trim()) {
       toast.error('Nama pembeli wajib diisi!')
+      return
+    }
+    if (!phone.trim()) {
+      toast.error('Nomor HP wajib diisi!')
+      return
+    }
+    if (!address.trim()) {
+      toast.error('Alamat pengiriman wajib diisi!')
       return
     }
     if (items.length === 0) {
@@ -51,6 +83,8 @@ export default function CartPage() {
       })
       .join('\n\n')
 
+    const fullAddress = [address, city, postalCode].filter(Boolean).join(', ')
+
     const message = [
       'Halo Batik AN 🙏',
       '',
@@ -58,10 +92,14 @@ export default function CartPage() {
       itemLines,
       '',
       `*Total: ${formatRupiah(total)}*`,
+      '',
+      '*Data Pengiriman:*',
       `Nama: ${buyerName}`,
+      `No. HP: ${phone}`,
+      `Alamat: ${fullAddress}`,
       notes ? `Catatan: ${notes}` : '',
       '',
-      'Mohon konfirmasi ketersediaan & info pengiriman. Terima kasih 🙏',
+      'Mohon konfirmasi ketersediaan & total ongkir. Terima kasih 🙏',
     ].filter(line => line !== undefined).join('\n')
 
     const phone = settings?.whatsapp_number || ''
@@ -141,18 +179,65 @@ export default function CartPage() {
 
               {/* Form */}
               <div className="rounded-lg border p-5" style={{ backgroundColor: '#FDFAF5', borderColor: 'rgba(201,168,76,0.2)' }}>
-                <h2 className="font-playfair font-semibold mb-4" style={{ color: '#8B1A1A' }}>Data Pemesan</h2>
+                <h2 className="font-playfair font-semibold mb-1" style={{ color: '#8B1A1A' }}>Data Pengiriman</h2>
+                <p className="text-xs text-gray-400 mb-4">Data disimpan di perangkat ini untuk memudahkan pemesanan berikutnya.</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Nama *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
                     <input
                       type="text"
                       value={buyerName}
                       onChange={e => setBuyerName(e.target.value)}
                       placeholder="Nama lengkap Anda"
-                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none"
+                      className="w-full border rounded px-3 py-2 text-sm focus:outline-none"
                       style={{ borderColor: 'rgba(201,168,76,0.4)' }}
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">No. HP / WhatsApp *</label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={e => setPhone(e.target.value)}
+                      placeholder="08xxxxxxxxxx"
+                      className="w-full border rounded px-3 py-2 text-sm focus:outline-none"
+                      style={{ borderColor: 'rgba(201,168,76,0.4)' }}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap *</label>
+                    <textarea
+                      value={address}
+                      onChange={e => setAddress(e.target.value)}
+                      placeholder="Jalan, RT/RW, kelurahan, kecamatan..."
+                      rows={2}
+                      className="w-full border rounded px-3 py-2 text-sm focus:outline-none resize-none"
+                      style={{ borderColor: 'rgba(201,168,76,0.4)' }}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Kota</label>
+                      <input
+                        type="text"
+                        value={city}
+                        onChange={e => setCity(e.target.value)}
+                        placeholder="Kota/Kabupaten"
+                        className="w-full border rounded px-3 py-2 text-sm focus:outline-none"
+                        style={{ borderColor: 'rgba(201,168,76,0.4)' }}
+                      />
+                    </div>
+                    <div className="w-28">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Kode Pos</label>
+                      <input
+                        type="text"
+                        value={postalCode}
+                        onChange={e => setPostalCode(e.target.value)}
+                        placeholder="00000"
+                        className="w-full border rounded px-3 py-2 text-sm focus:outline-none"
+                        style={{ borderColor: 'rgba(201,168,76,0.4)' }}
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Catatan (opsional)</label>
@@ -160,8 +245,8 @@ export default function CartPage() {
                       value={notes}
                       onChange={e => setNotes(e.target.value)}
                       placeholder="Catatan tambahan untuk pesanan..."
-                      rows={3}
-                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none resize-none"
+                      rows={2}
+                      className="w-full border rounded px-3 py-2 text-sm focus:outline-none resize-none"
                       style={{ borderColor: 'rgba(201,168,76,0.4)' }}
                     />
                   </div>
