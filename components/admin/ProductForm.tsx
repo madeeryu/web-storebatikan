@@ -49,7 +49,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
   const router = useRouter()
   const [categories, setCategories] = useState<Category[]>([])
   const [images, setImages] = useState<string[]>(initialData?.images ?? [])
-  const [colors, setColors] = useState<{ name: string; hex_code: string; images?: string[] }[]>(
+  const [colors, setColors] = useState<{ name: string; hex_code: string; images?: string[]; available_sizes?: string[] }[]>(
     initialData?.variants?.colors ?? []
   )
   const [sizes, setSizes] = useState<string[]>(initialData?.variants?.sizes ?? [])
@@ -113,6 +113,22 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
 
   const removeColor = (index: number) => {
     setColors((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  // Toggle ukuran yang tersedia untuk warna tertentu
+  const toggleColorSize = (colorIndex: number, size: string) => {
+    setColors((prev) =>
+      prev.map((c, i) => {
+        if (i !== colorIndex) return c
+        const avail = c.available_sizes ?? []
+        return {
+          ...c,
+          available_sizes: avail.includes(size)
+            ? avail.filter((s) => s !== size)
+            : [...avail, size],
+        }
+      })
+    )
   }
 
   // Toggle sebuah foto galeri untuk warna tertentu
@@ -381,6 +397,35 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
                         </button>
                       )
                     })}
+                  </div>
+                )}
+
+                {/* Pilih ukuran yang tersedia untuk warna ini */}
+                {sizes.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-xs text-stone-500 mb-1.5">
+                      Ukuran tersedia untuk warna ini{' '}
+                      <span className="text-stone-400">(kosong = semua ukuran tersedia)</span>
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {sizes.map((s) => {
+                        const active = c.available_sizes?.includes(s)
+                        return (
+                          <button
+                            type="button"
+                            key={s}
+                            onClick={() => toggleColorSize(i, s)}
+                            className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
+                              active
+                                ? 'bg-[#8B1A1A] text-white border-[#8B1A1A]'
+                                : 'bg-white text-stone-500 border-stone-300 hover:border-[#8B1A1A]'
+                            }`}
+                          >
+                            {s}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
                 )}
               </div>

@@ -26,6 +26,7 @@ export interface ProductColor {
   name: string                      // "Merah Marun", "Navy", dll
   hex_code: string                  // "#8B1A1A"
   images?: string[]                 // foto khusus warna ini (opsional)
+  available_sizes?: string[]        // ukuran yang tersedia utk warna ini; kosong = semua tersedia
 }
 
 export interface Category {

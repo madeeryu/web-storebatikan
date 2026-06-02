@@ -71,6 +71,20 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
   const colorFirstImage = colorObj?.images?.[0]
   const initialImageIndex = colorFirstImage ? Math.max(0, allImages.indexOf(colorFirstImage)) : 0
 
+  // Ukuran yang tersedia untuk warna terpilih (kosong = semua tersedia)
+  const allSizes = product.variants?.sizes || []
+  const availableSizes =
+    colorObj?.available_sizes && colorObj.available_sizes.length > 0
+      ? allSizes.filter((s) => colorObj.available_sizes!.includes(s))
+      : allSizes
+
+  // Reset ukuran jika tidak tersedia di warna terpilih
+  useEffect(() => {
+    if (selectedSize && availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
+      setSelectedSize(availableSizes[0])
+    }
+  }, [selectedColor]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Harga menyesuaikan ukuran terpilih (jika ukuran punya harga khusus)
   const sizePrices = product.variants?.size_prices ?? {}
   const basePrice = (selectedSize && sizePrices[selectedSize]) || product.price
@@ -163,7 +177,7 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
             {hasVariants && (
               <VariantSelector
                 colors={product.variants?.colors || []}
-                sizes={product.variants?.sizes || []}
+                sizes={availableSizes}
                 sizePrices={sizePrices}
                 selectedColor={selectedColor}
                 selectedSize={selectedSize}
