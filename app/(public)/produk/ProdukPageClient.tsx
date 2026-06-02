@@ -99,8 +99,14 @@ export function ProdukPageClient() {
       <ProductFilter />
 
       <div className="mt-4">
+        {/* Info hasil pencarian */}
+        {q && !loading && (
+          <p className="text-sm mb-4" style={{ color: '#6B3F2A' }}>
+            Hasil pencarian untuk <span className="font-semibold">&quot;{q}&quot;</span> — {totalCount} produk
+          </p>
+        )}
         {/* Count */}
-        {!loading && totalCount > 0 && (
+        {!q && !loading && totalCount > 0 && (
           <p className="text-sm text-gray-500 mb-4">
             Menampilkan {totalCount} produk
           </p>

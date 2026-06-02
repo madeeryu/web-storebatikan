@@ -42,6 +42,9 @@ export function ProductFilter() {
 
   function applyFilter(f: FilterState) {
     const p = new URLSearchParams()
+    // Pertahankan kata kunci pencarian
+    const q = params.get('q')
+    if (q) p.set('q', q)
     if (f.categories.length) p.set('kategori', f.categories.join(','))
     if (f.minPrice > 0) p.set('min', String(f.minPrice))
     if (f.maxPrice < MAX_PRICE) p.set('max', String(f.maxPrice))
