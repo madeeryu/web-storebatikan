@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Minus, Plus, ShoppingCart, Heart, ChevronDown } from 'lucide-react'
+import { Minus, Plus, ShoppingCart, Heart, ChevronDown, MessageCircle } from 'lucide-react'
+import { getStoreSettings } from '@/lib/firestore'
+import { generateWALink } from '@/lib/utils'
 import { ProductGallery } from '@/components/product/ProductGallery'
 import { VariantSelector } from '@/components/product/VariantSelector'
 import { ReviewSection } from '@/components/product/ReviewSection'
@@ -31,6 +33,33 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
   const router = useRouter()
   const { addItem } = useCart()
   const { toggle, isWishlisted } = useWishlist()
+  const [waNumber, setWaNumber] = useState('')
+
+  useEffect(() => {
+    getStoreSettings()
+      .then((s) => { if (s?.whatsapp_number) setWaNumber(s.whatsapp_number) })
+      .catch(() => {})
+  }, [])
+
+  function handleAskAdmin() {
+    if (!waNumber) {
+      toast.error('Nomor WhatsApp toko belum tersedia.')
+      return
+    }
+    const url = typeof window !== 'undefined' ? window.location.href : ''
+    const msg = [
+      'Halo Batik AN 🙏',
+      '',
+      `Saya ingin bertanya tentang produk:`,
+      `*${product.name}*`,
+      selectedColor ? `Warna: ${selectedColor}` : '',
+      selectedSize ? `Ukuran: ${selectedSize}` : '',
+      url ? `Link: ${url}` : '',
+      '',
+      'Apakah produk ini tersedia?',
+    ].filter(Boolean).join('\n')
+    window.open(generateWALink(waNumber, msg), '_blank')
+  }
 
   const wishlisted = isWishlisted(product.id)
   const hasVariants = (product.variants?.colors?.length ?? 0) > 0 || (product.variants?.sizes?.length ?? 0) > 0
@@ -197,6 +226,16 @@ export function DetailProdukClient({ product, finalPrice, discountPercent }: Pro
                 <Heart size={18} className={wishlisted ? 'fill-white' : ''} />
               </button>
             </div>
+
+            {/* Tanya Admin via WhatsApp */}
+            <button
+              onClick={handleAskAdmin}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded font-semibold text-sm border transition-colors"
+              style={{ borderColor: '#25D366', color: '#1DA851' }}
+            >
+              <MessageCircle size={18} />
+              Tanya tentang produk ini
+            </button>
 
             {/* Deskripsi */}
             {product.description && (
