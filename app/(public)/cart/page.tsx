@@ -102,13 +102,13 @@ export default function CartPage() {
       'Mohon konfirmasi ketersediaan & total ongkir. Terima kasih 🙏',
     ].filter(line => line !== undefined).join('\n')
 
-    const phone = settings?.whatsapp_number || ''
-    if (!phone) {
+    const storePhone = settings?.whatsapp_number || ''
+    if (!storePhone) {
       toast.error('Nomor WhatsApp toko belum dikonfigurasi.')
       return
     }
 
-    const waLink = generateWALink(phone, message)
+    const waLink = generateWALink(storePhone, message)
     window.open(waLink, '_blank')
   }
 
