@@ -28,6 +28,10 @@ const settingsSchema = z.object({
   instagram: z.string().optional(),
   whatsapp_message_template: z.string().optional(),
   address: z.string().optional(),
+  ongkir_jabodetabek: z.number().min(0),
+  ongkir_jawa: z.number().min(0),
+  ongkir_bali_ntb: z.number().min(0),
+  ongkir_luar_jawa: z.number().min(0),
   about_story: z.string().optional(),
   about_vision: z.string().optional(),
   about_mission: z.string().optional(),
@@ -60,6 +64,10 @@ export default function AdminPengaturanPage() {
       instagram: '',
       whatsapp_message_template: DEFAULT_WA_TEMPLATE,
       address: '',
+      ongkir_jabodetabek: 0,
+      ongkir_jawa: 0,
+      ongkir_bali_ntb: 0,
+      ongkir_luar_jawa: 0,
       about_story: '',
       about_vision: '',
       about_mission: '',
@@ -81,6 +89,10 @@ export default function AdminPengaturanPage() {
             instagram: data.instagram ?? '',
             whatsapp_message_template: data.whatsapp_message_template ?? DEFAULT_WA_TEMPLATE,
             address: data.address ?? '',
+            ongkir_jabodetabek: data.shipping_rates?.jabodetabek ?? 0,
+            ongkir_jawa: data.shipping_rates?.jawa ?? 0,
+            ongkir_bali_ntb: data.shipping_rates?.bali_ntb ?? 0,
+            ongkir_luar_jawa: data.shipping_rates?.luar_jawa ?? 0,
             about_story: data.about_story ?? '',
             about_vision: data.about_vision ?? '',
             about_mission: data.about_mission ?? '',
@@ -105,6 +117,12 @@ export default function AdminPengaturanPage() {
         instagram: data.instagram ?? '',
         whatsapp_message_template: data.whatsapp_message_template ?? DEFAULT_WA_TEMPLATE,
         address: data.address ?? '',
+        shipping_rates: {
+          jabodetabek: data.ongkir_jabodetabek ?? 0,
+          jawa: data.ongkir_jawa ?? 0,
+          bali_ntb: data.ongkir_bali_ntb ?? 0,
+          luar_jawa: data.ongkir_luar_jawa ?? 0,
+        },
         about_story: data.about_story ?? '',
         about_vision: data.about_vision ?? '',
         about_mission: data.about_mission ?? '',
@@ -261,6 +279,35 @@ export default function AdminPengaturanPage() {
                   <li><code className="bg-amber-100 px-1 rounded">{'{nama}'}</code> — nama pembeli</li>
                   <li><code className="bg-amber-100 px-1 rounded">{'{catatan}'}</code> — catatan/pesan dari pembeli</li>
                 </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Section: Estimasi Ongkir ── */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-5">
+            <div>
+              <h2 className="font-semibold text-[#1C1C1C]">Estimasi Ongkos Kirim</h2>
+              <p className="text-xs text-gray-400 mt-1">
+                Tarif estimasi per zona. Tampil di keranjang saat pelanggan pilih wilayah. Ongkir final tetap dikonfirmasi via WhatsApp.
+              </p>
+            </div>
+            <Separator />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="ongkir_jabodetabek">Jabodetabek (Rp)</Label>
+                <Input id="ongkir_jabodetabek" type="number" min={0} {...register('ongkir_jabodetabek', { valueAsNumber: true })} placeholder="15000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="ongkir_jawa">Pulau Jawa (Rp)</Label>
+                <Input id="ongkir_jawa" type="number" min={0} {...register('ongkir_jawa', { valueAsNumber: true })} placeholder="25000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="ongkir_bali_ntb">Bali & Nusa Tenggara (Rp)</Label>
+                <Input id="ongkir_bali_ntb" type="number" min={0} {...register('ongkir_bali_ntb', { valueAsNumber: true })} placeholder="35000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="ongkir_luar_jawa">Luar Jawa lainnya (Rp)</Label>
+                <Input id="ongkir_luar_jawa" type="number" min={0} {...register('ongkir_luar_jawa', { valueAsNumber: true })} placeholder="45000" />
               </div>
             </div>
           </div>

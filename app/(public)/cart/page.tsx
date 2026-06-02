@@ -20,6 +20,7 @@ export default function CartPage() {
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('')
   const [postalCode, setPostalCode] = useState('')
+  const [zone, setZone] = useState('')
   const [notes, setNotes] = useState('')
   const [settings, setSettings] = useState<StoreSettings | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -50,6 +51,17 @@ export default function CartPage() {
   if (!mounted) return null
 
   const total = getTotal()
+
+  // Estimasi ongkir per zona
+  const ZONES = [
+    { key: 'jabodetabek', label: 'Jabodetabek' },
+    { key: 'jawa', label: 'Pulau Jawa' },
+    { key: 'bali_ntb', label: 'Bali & Nusa Tenggara' },
+    { key: 'luar_jawa', label: 'Luar Jawa lainnya' },
+  ] as const
+  const rates = settings?.shipping_rates ?? {}
+  const ongkir = zone ? Number((rates as any)[zone] || 0) : 0
+  const grandTotal = total + ongkir
 
   function handleCheckout() {
     if (!buyerName.trim()) {
@@ -91,7 +103,9 @@ export default function CartPage() {
       'Saya ingin memesan:',
       itemLines,
       '',
-      `*Total: ${formatRupiah(total)}*`,
+      `Subtotal: ${formatRupiah(total)}`,
+      zone ? `Estimasi ongkir (${ZONES.find(z => z.key === zone)?.label}): ${formatRupiah(ongkir)}` : '',
+      `*Estimasi Total: ${formatRupiah(grandTotal)}*`,
       '',
       '*Data Pengiriman:*',
       `Nama: ${buyerName}`,
@@ -99,7 +113,7 @@ export default function CartPage() {
       `Alamat: ${fullAddress}`,
       notes ? `Catatan: ${notes}` : '',
       '',
-      'Mohon konfirmasi ketersediaan & total ongkir. Terima kasih 🙏',
+      'Mohon konfirmasi ketersediaan & total ongkir final. Terima kasih 🙏',
     ].filter(line => line !== undefined).join('\n')
 
     const storePhone = settings?.whatsapp_number || ''
@@ -171,10 +185,37 @@ export default function CartPage() {
                   <span className="text-gray-500">{items.reduce((s, i) => s + i.quantity, 0)} produk</span>
                   <span className="font-semibold">{formatRupiah(total)}</span>
                 </div>
-                <div className="border-t border-dashed border-gray-200 pt-3 mt-3 flex justify-between font-bold">
-                  <span>Total</span>
-                  <span style={{ color: '#8B1A1A' }}>{formatRupiah(total)}</span>
+
+                {/* Pilih wilayah untuk estimasi ongkir */}
+                <div className="mt-3">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Estimasi Ongkir — Wilayah</label>
+                  <select
+                    value={zone}
+                    onChange={e => setZone(e.target.value)}
+                    className="w-full border rounded px-2 py-1.5 text-sm bg-white focus:outline-none"
+                    style={{ borderColor: 'rgba(201,168,76,0.4)' }}
+                  >
+                    <option value="">Pilih wilayah...</option>
+                    {ZONES.map(z => (
+                      <option key={z.key} value={z.key}>{z.label}</option>
+                    ))}
+                  </select>
                 </div>
+
+                {zone && (
+                  <div className="flex justify-between text-sm mt-3">
+                    <span className="text-gray-500">Estimasi ongkir</span>
+                    <span className="font-semibold">{ongkir > 0 ? formatRupiah(ongkir) : 'Hubungi admin'}</span>
+                  </div>
+                )}
+
+                <div className="border-t border-dashed border-gray-200 pt-3 mt-3 flex justify-between font-bold">
+                  <span>{zone ? 'Estimasi Total' : 'Total'}</span>
+                  <span style={{ color: '#8B1A1A' }}>{formatRupiah(grandTotal)}</span>
+                </div>
+                <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
+                  *Ongkir bersifat estimasi. Total final dikonfirmasi admin via WhatsApp.
+                </p>
               </div>
 
               {/* Form */}

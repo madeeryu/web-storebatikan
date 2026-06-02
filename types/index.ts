@@ -95,6 +95,12 @@ export interface StoreSettings {
   about_story?: string              // cerita "Tentang Kami"
   about_vision?: string             // visi
   about_mission?: string            // misi (pisahkan tiap poin dengan baris baru)
+  shipping_rates?: {                // estimasi ongkir per zona (Rp)
+    jabodetabek?: number
+    jawa?: number
+    bali_ntb?: number
+    luar_jawa?: number
+  }
 }
 
 // Untuk filter halaman produk
