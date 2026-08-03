@@ -33,6 +33,9 @@ export const baseMetadata: Metadata = {
   authors: [{ name: "Batik AN" }],
   creator: "Batik AN",
   publisher: "Batik AN",
+  verification: {
+    google: "rvwrOZkWKHTToLUdfwOFY3Gz4LDXI18Cd3pHCBFjZu4",
+  },
   openGraph: {
     type: "website",
     locale: "id_ID",
